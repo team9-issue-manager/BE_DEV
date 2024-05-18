@@ -18,12 +18,12 @@ public class AccountController {
 
     private final AccountRepository accountRepository;
 
-    @GetMapping(value = "/user/{id}") //user 찾기
+    @GetMapping(value = "/userfind/{id}") //user 찾기
     public Optional<Account> findUser(@PathVariable("id") String id) { // 먼저 존재여부를 파악하고 Optional을 써야할 듯
         return accountRepository.findById(id);
     }
 
-    @GetMapping("/user/{id},{password}")
+    @GetMapping("/useradd/{id},{password}")
     public void uploadAccount(@PathVariable("id") String id, @PathVariable("password") String password){
         Account account = new Account(id, password); //수정필요
 

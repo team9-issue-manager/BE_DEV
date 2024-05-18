@@ -37,11 +37,11 @@ public class Account {
         this.id = id;
     }
 
-    public String getName() {
+    public String getPassword() {
         return password;
     }
 
-    public void setName(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
