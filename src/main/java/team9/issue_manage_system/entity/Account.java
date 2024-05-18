@@ -1,12 +1,15 @@
 package team9.issue_manage_system.entity;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Data
+@Getter
+@Setter
 public class Account {
 
     public Account(String id, String password, String role){
@@ -26,33 +29,6 @@ public class Account {
 
     private String password;
     private String role;
-
-
-    // getter setter
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
 
     public Account() {}
 }
