@@ -15,7 +15,6 @@ import java.util.Optional;
 @RestController  //@Controller + @ResponseBody
 @RequiredArgsConstructor // final이 선언된 모든 필드를 인자값으로 하는 생성자를 자동(대신) 생성
 public class AccountController {
-
     private final AccountRepository accountRepository;
 
     @GetMapping(value = "/userfind/{id}") //user 찾기
