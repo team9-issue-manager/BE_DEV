@@ -14,7 +14,8 @@ import java.util.Optional;
 public class AccountController {
     private final AccountRepository accountRepository;
 
-    @PostMapping("/userFind")
+    // 그 유저가 있는지 확인하는 거니까 POST, GET 메서드 다 허용.
+    @RequestMapping( value = "/userFind", method = {RequestMethod.GET, RequestMethod.POST})
     public Optional<Account> findUser(@RequestBody Account account){
         return accountRepository.findById(account.getId());
     }
