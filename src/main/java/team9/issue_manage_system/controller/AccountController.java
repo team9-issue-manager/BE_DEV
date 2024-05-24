@@ -19,6 +19,7 @@ public class AccountController {
     public Optional<Account> findUser(@RequestBody Account account){
         System.out.println("account.id: " + account.getId());
         System.out.println("account.password: " + account.getPassword());
+        System.out.println("account.role: " + account.getRole());
         return accountRepository.findById(account.getId());
     }
 
@@ -33,7 +34,7 @@ public class AccountController {
 
     @PostMapping("/userAdd")
     public void uploadAccount(@RequestBody Account account){
-        Account account1 = new Account(account.getId(), account.getPassword(), "tester");
+        Account account1 = new Account(account.getId(), account.getPassword(), account.getRole());
         System.out.println("account.id: " + account1.getId());
         System.out.println("account.password: " + account1.getPassword());
         System.out.println("account.role: " + account1.getRole());

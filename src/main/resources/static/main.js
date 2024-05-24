@@ -1,3 +1,6 @@
+let buttonInProgress = "tester";
+
+
 function signUp() {
     const submitButton = document.querySelector(".signUpSubmit");
     submitButton.addEventListener("click", () => {
@@ -12,7 +15,7 @@ function signUp() {
                     console.log(this.responseText);
                 }
             }
-            const body = JSON.stringify({"id" : idValue, "password" : pwValue, "role" : "tester"});
+            const body = JSON.stringify({"id" : idValue, "password" : pwValue, "role" : buttonInProgress});
             xhr.send(body);
         }
 
@@ -33,12 +36,29 @@ function signIn() {
                     console.log(this.responseText);
                 }
             }
-            const body = JSON.stringify({"id" : idValue, "password" : pwValue, "role" : "tester"});
+            const body = JSON.stringify({"id" : idValue, "password" : pwValue, "role" : buttonInProgress});
             xhr.send(body);
         }
     })
 }
 
+function signUpButtons() {
+    const buttonList = document.querySelector(".buttonList");
+    const plButton = document.getElementById("plButton");
+    const devButton = document.getElementById("devButton");
+    const testerButton = document.getElementById("testerButton");
+    plButton.addEventListener("click", () => {
+        buttonInProgress = "pl";
+    });
+    devButton.addEventListener("click", () => {
+        buttonInProgress = "dev";
+    });
+    testerButton.addEventListener("click", () => {
+        buttonInProgress = "tester";
+    });
+
+}
 
 signUp();
 signIn();
+signUpButtons();
