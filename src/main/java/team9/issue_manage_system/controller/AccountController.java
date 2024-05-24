@@ -1,6 +1,7 @@
 package team9.issue_manage_system.controller;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import team9.issue_manage_system.entity.Account;
@@ -14,8 +15,12 @@ import java.util.Optional;
 public class AccountController {
     private final AccountRepository accountRepository;
 
-    @PostMapping("/userFind")
+    // 그 유저가 있는지 확인하는 거니까 POST, GET 메서드 다 허용.
+    @RequestMapping( value = "/userFind", method = {RequestMethod.GET, RequestMethod.POST})
     public Optional<Account> findUser(@RequestBody Account account){
+        System.out.println("account.id: " + account.getId());
+        System.out.println("account.password: " + account.getPassword());
+        System.out.println("account.role: " + account.getRole());
         return accountRepository.findById(account.getId());
     }
 
@@ -30,7 +35,12 @@ public class AccountController {
 
     @PostMapping("/userAdd")
     public void uploadAccount(@RequestBody Account account){
-        Account account1 = new Account(account.getId(), account.getPassword(), "tester");
-        accountRepository.save(account1);
+        Account account1 = new Account(account.getId(), account.getPassword(), account.getRole());
+        if (!accountRepository.existsById(account.getId())){
+            System.out.println("account.id: " + account1.getId());
+            System.out.println("account.password: " + account1.getPassword());
+            System.out.println("account.role: " + account1.getRole());
+            accountRepository.save(account1);
+        }
     }
 }
