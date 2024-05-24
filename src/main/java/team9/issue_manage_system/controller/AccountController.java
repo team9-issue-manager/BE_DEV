@@ -1,6 +1,7 @@
 package team9.issue_manage_system.controller;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import team9.issue_manage_system.entity.Account;
@@ -35,9 +36,11 @@ public class AccountController {
     @PostMapping("/userAdd")
     public void uploadAccount(@RequestBody Account account){
         Account account1 = new Account(account.getId(), account.getPassword(), account.getRole());
-        System.out.println("account.id: " + account1.getId());
-        System.out.println("account.password: " + account1.getPassword());
-        System.out.println("account.role: " + account1.getRole());
-        accountRepository.save(account1);
+        if (!accountRepository.existsById(account.getId())){
+            System.out.println("account.id: " + account1.getId());
+            System.out.println("account.password: " + account1.getPassword());
+            System.out.println("account.role: " + account1.getRole());
+            accountRepository.save(account1);
+        }
     }
 }
