@@ -105,6 +105,22 @@ function issueAdd() {
 
 function issueFind() {
     const submitButton = document.querySelector(".issueFindSubmit");
+    submitButton.addEventListener("click", () => {
+        const titleValue = document.querySelector(".issueFindTitle").value;
+        if (titleValue.trim() !== "" && contentValue.trim() !== "") {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:8080/issueFind", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(this.responseText);
+                }
+            }
+            const body = JSON.stringify({"title" : titleValue});
+            console.log(body);
+            xhr.send(body);
+        }
+    })
 }
 
 
@@ -113,3 +129,4 @@ signUp();
 signIn();
 signUpButtons();
 issueAdd();
+issueFind();
