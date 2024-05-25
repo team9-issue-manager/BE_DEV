@@ -44,9 +44,7 @@ public class Issue {
         this.content = content;
         this.accountId = id;
         this.tags = tags;
-        if (this.issueNum == null) {
-            this.issueNum = 1L;
-        }
+        this.state = 0;
     }
 
     @Data
