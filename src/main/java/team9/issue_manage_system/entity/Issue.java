@@ -25,12 +25,21 @@ public class Issue {
 
     private String title;
     private String content;
-    private String accountId; //writer 같은 느낌.
-    private String devId; // dev 배정
-    private Integer state; // 0:new, 1:assigned, 2:fixed, 3:resolved, 4:closed
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "accountId", referencedColumnName = "id")
+    // private String accountId; //writer -> 위의 왜래키 관계를 통해 issue table에 accountId 자동으로 생성
+    private Account account;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "devId", referencedColumnName = "id")
+    private Account developer;
+    private Integer state = 0; // 0:new, 1:assigned, 2:fixed, 3:resolved, 4:closed
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+
     @ElementCollection(targetClass = Tag.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "issue_tags")
@@ -40,16 +49,14 @@ public class Issue {
 
     public Issue() {}
 
-    public Issue(String title, String content, String id){
+    public Issue(String title, String content){
         this.title = title;
         this.content = content;
-        this.accountId = id;
     }
 
     public Issue(String title, String content, String id, Set<Tag> tags){
         this.title = title;
         this.content = content;
-        this.accountId = id;
         this.tags = tags;
     }
 

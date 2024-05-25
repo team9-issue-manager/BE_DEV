@@ -1,10 +1,14 @@
 package team9.issue_manage_system.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Entity
 @Data
@@ -18,11 +22,11 @@ public class Account {
         this.role = role; //
     }
 
-    public Account(String id, String password, Integer mode) {
+    public Account(String id, String password) {
         this.id = id;
         this.password = password;
         this.role = "tester";
-        if (mode > 0) mode += 1; // 나중에 수정
+        //if (mode > 0) mode += 1; // 나중에 수정
     }
 
     @Id
@@ -30,6 +34,9 @@ public class Account {
 
     private String password;
     private String role;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    private Set<Issue> issues;
 
     public Account() {}
 }

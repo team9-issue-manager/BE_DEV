@@ -14,6 +14,7 @@ import java.util.*;
 @RestController  //@Controller + @ResponseBody
 @RequiredArgsConstructor // final이 선언된 모든 필드를 인자값으로 하는 생성자를 자동(대신) 생성
 public class AccountController {
+
     private final AccountRepository accountRepository;
 
     // 그 유저가 있는지 확인하는 거니까 POST, GET 메서드 다 허용.
@@ -47,6 +48,7 @@ public class AccountController {
     /**
      * ID 중복 여부 확인 : 존재하면 true, 새로운 경우 false
      * @param account : Account타입의 클래스 (이 부분은 수정 필요 : ID체크에는 Password가 없으므로)
+     *                -> 어처피 account의 primary key가 id라 딱히 상관없을 듯?
      */
     @PostMapping("/userIdCheck")
     public ResponseEntity<Map<String, Boolean>> findUserIdCheck(@RequestBody Account account){
@@ -65,14 +67,17 @@ public class AccountController {
     // 회원가입
     @PostMapping("/userAdd")
     public ResponseEntity<Map<String, Boolean>> uploadAccount(@RequestBody Account account){
-        Account account1 = new Account(account.getId(), account.getPassword(), account.getRole());
+        Account newAccount = new Account(account.getId(), account.getPassword(), account.getRole());
         Map<String, Boolean> response = new HashMap<String, Boolean>();
 
         if (!accountRepository.existsById(account.getId())){ // 해당하는 id의 회원 생성 성공
-            System.out.println("account.id: " + account1.getId());
-            System.out.println("account.password: " + account1.getPassword());
-            System.out.println("account.role: " + account1.getRole());
-            accountRepository.save(account1);
+            System.out.println("account.id: " + newAccount.getId());
+            System.out.println("account.password: " + newAccount.getPassword());
+            System.out.println("account.role: " + newAccount.getRole());
+
+            // 일단은 account1의 role을 tester로 바꾸고 요청 보내는 걸 추가 해야할듯
+
+            accountRepository.save(newAccount);
             response.put("success", true);
             return ResponseEntity.ok(response);
         }
