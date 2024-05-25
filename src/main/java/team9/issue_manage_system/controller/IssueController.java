@@ -28,6 +28,8 @@ public class IssueController {
 
     @PostMapping("/issueAdd")
     public void uploadIssue(@RequestBody Issue issue){
+        System.out.println(issue);
+//        Issue newIssue = new Issue(issue.getTitle(), issue.getContent(), issue.getAccountId(), issue.getTags());
         issueRepository.save(issue);
     }
 }

@@ -86,7 +86,7 @@ function issueAdd() {
         const titleValue = document.querySelector(".issueAddTitle").value;
         const contentValue = document.querySelector(".issueAddContent").value;
         const idValue = "user_name";
-        const tagValue = ["HW", "SW", "NETWORK"];
+        const tagValue = ["PL"];
         if (titleValue.trim() !== "" && contentValue.trim() !== "") {
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "http://localhost:8080/issueAdd", true);
@@ -96,7 +96,8 @@ function issueAdd() {
                     console.log(this.responseText);
                 }
             }
-            const body = JSON.stringify({"title" : titleValue, "content" : contentValue, "id" : idValue, "tags" : tagValue});
+            const body = JSON.stringify({"title" : titleValue, "content" : contentValue, "accountId" : idValue, "tags" : tagValue});
+            console.log(body);
             xhr.send(body);
         }
     })
