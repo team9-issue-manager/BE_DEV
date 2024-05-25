@@ -12,7 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IssueController {
     private final IssueRepository issueRepository;
-    @GetMapping("/searchIssue")
+    @GetMapping("/issueFind")
     public List<Issue> searchIssueByTitle(@RequestBody Issue.IssueSearchRequest issueSearchRequest) {
         String title = issueSearchRequest.getTitle();
         if (title == null) {
@@ -21,6 +21,10 @@ public class IssueController {
         return issueRepository.findByTitleContaining(title);
     }
 
+    @GetMapping("/issueList")
+    public List<Issue> issueList() {
+        return issueRepository.findAll();
+    }
 
     @PostMapping("/issueAdd")
     public void uploadIssue(@RequestBody Issue issue){

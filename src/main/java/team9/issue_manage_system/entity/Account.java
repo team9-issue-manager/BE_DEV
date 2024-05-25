@@ -21,7 +21,13 @@ public class Account {
     public Account(String id, String password) {
         this.id = id;
         this.password = password;
-        //this.role = null;
+        this.role = "tester";
+    }
+
+    // 미완
+    public boolean changeRole(String id, String role)
+    {
+        return false;
     }
 
     @Id
