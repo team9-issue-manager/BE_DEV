@@ -22,6 +22,7 @@ public class Issue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long issueNum;
+
     private String title;
     private String content;
     private String accountId; //writer 같은 느낌.
@@ -38,6 +39,12 @@ public class Issue {
 
 
     public Issue() {}
+
+    public Issue(String title, String content, String id){
+        this.title = title;
+        this.content = content;
+        this.accountId = id;
+    }
 
     public Issue(String title, String content, String id, Set<Tag> tags){
         this.title = title;

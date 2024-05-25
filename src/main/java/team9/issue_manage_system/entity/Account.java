@@ -15,19 +15,14 @@ public class Account {
     public Account(String id, String password, String role){
         this.id = id;
         this.password = password;
-        this.role = role;
+        this.role = role; //
     }
 
-    public Account(String id, String password) {
+    public Account(String id, String password, Integer mode) {
         this.id = id;
         this.password = password;
         this.role = "tester";
-    }
-
-    // 미완
-    public boolean changeRole(String id, String role)
-    {
-        return false;
+        if (mode > 0) mode += 1; // 나중에 수정
     }
 
     @Id
