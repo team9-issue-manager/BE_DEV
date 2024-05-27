@@ -29,7 +29,7 @@ public class IssueController {
         if (title == null) {
             throw new IllegalArgumentException("Title cannot be null");
         }
-        return issueRepository.findByTitleContaining(title);
+        return issueRepository.findByTitleContaining(title); // 해당 title을 포함하는 모드 issue find
     }
 
     @GetMapping("/issueList")
@@ -46,6 +46,7 @@ public class IssueController {
     @PostMapping("/issueAdd")
     public ResponseEntity<Map<String, Object>> uploadIssue(@RequestBody IssueDto issueDto) {
         Optional<Account> accountOpt = accountRepository.findById(issueDto.getAccountId());
+        System.out.println("check issue: " +  accountOpt);
         Map<String, Object> response = new HashMap<>();
 
         if (accountOpt.isPresent()) {
@@ -68,12 +69,12 @@ public class IssueController {
     }
 
 
-    @PostMapping("/issue/assignDev") // 직접 dev 입력
+    @PostMapping("/issue/assignDev") // 직접 dev 입력 // pl의 권한
     public ResponseEntity<Map<String, Object>> assignDev(@RequestBody IssueAssignDevDto request) {
         Optional<Issue> issueOpt = issueRepository.findById(request.getIssueNum());
         Optional<Account> devOpt = accountRepository.findById(request.getDevId());
         Map<String, Object> response = new HashMap<>();
-
+        // devId = null인 경우만 추가시킬지 아니면 그냥 다 바꿀 수 있도록 냅둘지 고민해봐야할 듯.
         if (issueOpt.isPresent() && devOpt.isPresent()) {
             Issue issue = issueOpt.get();
             Account developer = devOpt.get();
@@ -96,31 +97,46 @@ public class IssueController {
     }
 
 
-//    @PostMapping("/issue/assignDevAuto") // 직접 dev 입력
-//    public ResponseEntity<Map<String, Object>> assignDevAuto(@RequestBody IssueAssignDevDto request) {
-//        Optional<Issue> issueOpt = issueRepository.findById(request.getIssueNum());
-//        //Optional<Account> devOpt = accountRepository.findById(request.getDevId());
-//        // 윗부분 알고리즘으로 특정 dev를 찾아 넣어야 할듯.? 테스트시 해당부분 전체 주석하고 하자.
-//        Map<String, Object> response = new HashMap<>();
-//
-//        if (issueOpt.isPresent() && devOpt.isPresent()) {
-//            Issue issue = issueOpt.get();
-//            Account developer = devOpt.get();
-//
-//            if (!"dev".equals(developer.getRole())) {
-//                response.put("success", false);
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-//            }
-//
-//            issue.setDeveloper(developer);
-//            issue.setState(1); // state: assigned
-//            issueRepository.save(issue);
-//
-//            response.put("success", true);
-//            return ResponseEntity.ok(response);
-//        } else {
-//            response.put("success", false);
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-//        }
-//    }
+    @PostMapping("/issue/assignDevAuto") // pl의 권한 자동으로 dev 배정
+    public ResponseEntity<Map<String, Object>> assignDevAuto(@RequestBody Issue.IssueAssignDev issueAssignDev) {
+        Long issueNum = issueAssignDev.getIssueNum();
+        Map<String, Object> response = new HashMap<>();
+
+        Optional<Issue> issueOpt = issueRepository.findById(issueNum);
+        if (issueOpt.isEmpty()) { // 해당하는 issue가 없음
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        Issue issue = issueOpt.get();
+        List<Account> developers = accountRepository.findByRole("dev");
+
+        Account selectedDev = null;
+        int minAssignedIssues = Integer.MAX_VALUE;
+        int maxResolvedIssues = -1;
+
+        for (Account developer : developers) {
+            int assignedIssuesCount = issueRepository.countByDeveloperAndStateBetween(developer, 1, 2);
+            int resolvedIssuesCount = issueRepository.countByDeveloperAndStateBetween(developer, 3, 4);
+
+            if (assignedIssuesCount < minAssignedIssues ||
+                    (assignedIssuesCount == minAssignedIssues && resolvedIssuesCount > maxResolvedIssues)) {
+                selectedDev = developer;
+                minAssignedIssues = assignedIssuesCount;
+                maxResolvedIssues = resolvedIssuesCount;
+            }
+        }
+
+        if (selectedDev == null) { // dev가 없음.
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+
+        issue.setDeveloper(selectedDev);
+        issue.setState(1); // state: assigned
+        issueRepository.save(issue);
+
+        response.put("success", true); // dev가 잘 할당 됨.
+        return ResponseEntity.ok(response);
+    }
 }

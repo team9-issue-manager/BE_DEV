@@ -54,7 +54,7 @@ public class Issue {
         this.content = content;
     }
 
-    public Issue(String title, String content, String id, Set<Tag> tags){
+    public Issue(String title, String content, Set<Tag> tags){
         this.title = title;
         this.content = content;
         this.tags = tags;
@@ -63,5 +63,10 @@ public class Issue {
     @Data
     public static class IssueSearchRequest {
         private String title;
+    }
+
+    @Data
+    public static class IssueAssignDev {
+        private Long issueNum;
     }
 }
