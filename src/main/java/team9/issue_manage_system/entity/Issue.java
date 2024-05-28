@@ -2,22 +2,14 @@ package team9.issue_manage_system.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Data
-@Getter
-@Setter
 // @Data 존재하니까 @Getter, @Setter 생략.
 public class Issue {
-    public enum Tag{
-        PL, DEV, TESTER
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,11 +32,7 @@ public class Issue {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @ElementCollection(targetClass = Tag.class)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "issue_tags")
-    @Column(name = "tag")
-    public Set<Tag> tags;
+    public String tag;
 
 
     public Issue() {}
@@ -54,10 +42,10 @@ public class Issue {
         this.content = content;
     }
 
-    public Issue(String title, String content, Set<Tag> tags){
+    public Issue(String title, String content, String tag){
         this.title = title;
         this.content = content;
-        this.tags = tags;
+        this.tag = tag;
     }
 
     @Data

@@ -11,6 +11,5 @@ public class IssueDto {
     private String title;
     private String content;
     private String accountId;
-    private Set<Issue.Tag> tags;
-
+    private String tag;
 }

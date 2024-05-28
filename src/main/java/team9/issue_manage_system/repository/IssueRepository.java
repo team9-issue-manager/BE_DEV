@@ -7,5 +7,7 @@ import team9.issue_manage_system.entity.Issue;
 import java.util.List;
 public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<Issue> findByTitleContaining(String title);
+    List<Issue> findByTagContaining(String tag);
+    List<Issue> findByAccountIdContaining(String accountId);
     int countByDeveloperAndStateBetween(Account developer, int startState, int endState);
 }

@@ -5,16 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team9.issue_manage_system.dto.IssueAssignDevDto;
+import team9.issue_manage_system.dto.IssueSearchDto;
 import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.entity.Issue;
 import team9.issue_manage_system.dto.IssueDto;
 import team9.issue_manage_system.repository.AccountRepository;
 import team9.issue_manage_system.repository.IssueRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,17 +21,41 @@ public class IssueController {
     private final IssueRepository issueRepository;
     private final AccountRepository accountRepository;
 
-    @GetMapping("/issueFind")
-    public List<Issue> searchIssueByTitle(@RequestBody Issue.IssueSearchRequest issueSearchRequest) {
-        String title = issueSearchRequest.getTitle();
-        if (title == null) {
-            throw new IllegalArgumentException("Title cannot be null");
+    @PostMapping("/issueFind")
+    public ResponseEntity<Map<String, Object>> searchIssueByFilter(@RequestBody IssueSearchDto issueSearchDto) {
+        String filterValue = issueSearchDto.getFilter(); // title, tag, writer
+        Map<String, Object> response = new HashMap<>();
+        List<Issue> issueList = Collections.emptyList();
+        if (filterValue.equals("title")) {
+            issueList= searchByTitle(issueSearchDto.getValue());
         }
-        return issueRepository.findByTitleContaining(title); // 해당 title을 포함하는 모드 issue find
+        else if (filterValue.equals("tag")) {
+            issueList = searchByTag(issueSearchDto.getValue());
+        }
+        else if (filterValue.equals("writer")) {
+            issueList= searchByWritter(issueSearchDto.getValue());
+        }
+
+        response.put("success", !issueList.isEmpty());
+        response.put("issues", issueList);
+        return ResponseEntity.ok(response); // 해당 title을 포함하는 모드 issue find
     }
 
+    private List<Issue> searchByTitle(String filterValue) {
+        return issueRepository.findByTitleContaining(filterValue);
+    }
+
+    private List<Issue> searchByTag(String filterValue) {
+        return issueRepository.findByTagContaining(filterValue);
+    }
+
+    private List<Issue> searchByWritter(String filterValue) {
+        return issueRepository.findByAccountIdContaining(filterValue);
+    }
+
+    // 모든 issue를 나열
     @GetMapping("/issueList")
-    public List<Issue> issueList() {
+    public List<Issue> issueListAll() {
         return issueRepository.findAll();
     }
 //
@@ -55,7 +77,7 @@ public class IssueController {
             issue.setTitle(issueDto.getTitle());
             issue.setContent(issueDto.getContent());
             issue.setAccount(account);
-            issue.setTags(issueDto.getTags());
+            issue.setTag(issueDto.getTag());
             issue.setState(0); // 기본값을 0으로 설정
 
             issueRepository.save(issue);
