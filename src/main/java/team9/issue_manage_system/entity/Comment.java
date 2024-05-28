@@ -20,7 +20,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 일단 long으로 해뒀는데, 만약 issue처럼 string으로 할거면 수정 필요
-    private Long commentNum;
+    private Long commentId;
 
     private String title;
     private String content;
