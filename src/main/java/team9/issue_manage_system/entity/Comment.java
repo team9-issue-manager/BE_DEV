@@ -25,9 +25,9 @@ public class Comment {
     private String title;
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "issue_id", nullable = false) // 일단 이슈 보고 판단해야할듯
-    private Issue issue; // 이거 맞나
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "issueNum", referencedColumnName = "issueNum")
+    private Issue issue;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
