@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.repository.AccountRepository;
+import team9.issue_manage_system.repository.AdminAuthRepository;
 
 import java.util.*;
 
@@ -15,6 +16,7 @@ import java.util.*;
 public class AccountController {
 
     private final AccountRepository accountRepository;
+    private final AdminAuthRepository adminAuthRepository;
 
     // 그 유저가 있는지 확인하는 거니까 POST, GET 메서드 다 허용.
     // 일단 로그인으로 짰어요
