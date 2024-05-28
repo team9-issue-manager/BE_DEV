@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import team9.issue_manage_system.entity.Issue;
 
 import java.util.List;
-public interface IssueRepository extends JpaRepository<Issue, String> {
+public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<Issue> findByTitleContaining(String title);
 }
