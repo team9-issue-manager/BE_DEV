@@ -6,5 +6,5 @@ import team9.issue_manage_system.entity.Account;
 import java.util.List;
 
 public interface AccountRepository extends JpaRepository<Account, String> {
-    List<Account> findByRole(String role);
+    List<Account> findAllByRole(String role);
 }

@@ -27,6 +27,11 @@ public class Issue {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "devId", referencedColumnName = "id")
     private Account developer;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "projectNum", referencedColumnName = "projectNum")
+    private Project project;
+
     private Integer state = 0; // 0:new, 1:assigned, 2:fixed, 3:resolved, 4:closed
 
     @CreationTimestamp
@@ -49,15 +54,5 @@ public class Issue {
         this.title = title;
         this.content = content;
         this.tag = tag;
-    }
-
-    @Data
-    public static class IssueSearchRequest {
-        private String title;
-    }
-
-    @Data
-    public static class IssueAssignDev {
-        private Long issueNum;
     }
 }

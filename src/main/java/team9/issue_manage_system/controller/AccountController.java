@@ -29,6 +29,20 @@ public class AccountController {
         return accountService.findUser(account);
     }
 
+    @GetMapping("/findByRole/{role}")
+    public ResponseEntity<Map<String, Object>> findAccountByRole(@PathVariable String role) {
+        List<Account> accounts = accountService.findUserByAccount(role);
+        Map<String, Object> response = new HashMap<>();
+        if (accounts.isEmpty()){
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        else {
+            response.put("success", true);
+            response.put("Account", accounts);
+            return ResponseEntity.ok(response);
+        }
+    }
     /**
      * ID 중복 여부 확인 : 존재하면 true, 새로운 경우 false
      * @param account : Account타입의 클래스 (이 부분은 수정 필요 : ID체크에는 Password가 없으므로)

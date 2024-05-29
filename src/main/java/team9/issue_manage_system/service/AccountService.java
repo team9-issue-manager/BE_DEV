@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.repository.AccountRepository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AccountService {
@@ -43,7 +40,12 @@ public class AccountService {
         response.put("role", null);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // 이거 404 not found 어처피 success로 판단하는 거면 .status(HttpStatus.NOT_FOUND)빼 버리기
     }
-    public ResponseEntity<Map<String, Boolean>> findUserIdCheck(Account account){
+
+    public List<Account> findUserByAccount(String role) {
+        return accountRepository.findAllByRole(role);
+    }
+
+    public ResponseEntity<Map<String, Boolean>> findUserIdCheck(Account account) {
         boolean check_exist = accountRepository.existsById(account.getId());
         Map<String, Boolean> response = new HashMap<String, Boolean>();
         if (check_exist) {

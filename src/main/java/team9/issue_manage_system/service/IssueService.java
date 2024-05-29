@@ -3,6 +3,7 @@ package team9.issue_manage_system.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import team9.issue_manage_system.dto.IssueAssignDevAutoDto;
 import team9.issue_manage_system.dto.IssueAssignDevDto;
 import team9.issue_manage_system.dto.IssueDto;
 import team9.issue_manage_system.dto.IssueSearchDto;
@@ -29,11 +30,11 @@ public class IssueService {
         List<Issue> issueList = Collections.emptyList();
 
         if (filterValue.equals("title")) {
-            issueList = issueRepository.findByTitleContaining(issueSearchDto.getValue());
+            issueList = issueRepository.findAllByTitleContaining(issueSearchDto.getValue());
         } else if (filterValue.equals("tag")) {
-            issueList = issueRepository.findByTagContaining(issueSearchDto.getValue());
+            issueList = issueRepository.findAllByTagContaining(issueSearchDto.getValue());
         } else if (filterValue.equals("writer")) {
-            issueList = issueRepository.findByAccountIdContaining(issueSearchDto.getValue());
+            issueList = issueRepository.findAllByAccountIdContaining(issueSearchDto.getValue());
         }
 
         response.put("success", !issueList.isEmpty());
@@ -94,8 +95,8 @@ public class IssueService {
         }
     }
 
-    public ResponseEntity<Map<String, Object>> assignDevAuto(Issue.IssueAssignDev issueAssignDev) {
-        Long issueNum = issueAssignDev.getIssueNum();
+    public ResponseEntity<Map<String, Object>> assignDevAuto(IssueAssignDevAutoDto issueAssignDevAuto) {
+        Long issueNum = issueAssignDevAuto.getIssueNum();
         Map<String, Object> response = new HashMap<>();
 
         Optional<Issue> issueOpt = issueRepository.findById(issueNum);
@@ -105,7 +106,7 @@ public class IssueService {
         }
 
         Issue issue = issueOpt.get();
-        List<Account> developers = accountRepository.findByRole("dev");
+        List<Account> developers = accountRepository.findAllByRole("dev");
 
         Account selectedDev = null;
         int minAssignedIssues = Integer.MAX_VALUE;

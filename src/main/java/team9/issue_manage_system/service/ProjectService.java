@@ -25,23 +25,19 @@ public class ProjectService {
         System.out.println(project);
     }
 
-    public ResponseEntity<Map<String, Object>> projectCreate(ProjectDto projectDto) {
+    public Optional<Project> projectCreate(ProjectDto projectDto) {
         Optional<Account> accountOpt = accountRepository.findById(projectDto.getPlId());
         System.out.println("check issue: " +  accountOpt);
         Map<String, Object> response = new HashMap<>();
 
-        if (accountOpt.isPresent()) {
+        if (accountOpt.isPresent() && accountOpt.get().getRole().equals("pl")) {
             Account account = accountOpt.get();
             Project project = new Project();
             project.setTitle(projectDto.getTitle());
-
+            project.setProjectLeader(account);
             projectRepository.save(project);
-            response.put("success", true);
-            response.put("project", account);
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("success", false);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return Optional.of(project);
         }
+        return Optional.empty();
     }
 }
