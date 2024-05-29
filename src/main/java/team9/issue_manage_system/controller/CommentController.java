@@ -19,13 +19,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/issue")
 public class CommentController {
 
     final private CommentRepository commentRepository;
     final private IssueRepository issueRepository;
 
     //특정 이슈의 모든 댓글 가져오기
-    @GetMapping("/issue/{issueNum}/comments")
+    @GetMapping("/{issueNum}/comments")
     public List<CommentDto> getCommentsByIssueId(@PathVariable Long issueNum) {
         List<Comment> comments = commentRepository.findByIssue_IssueNum(issueNum);
         return comments.stream()
@@ -43,14 +44,14 @@ public class CommentController {
     }
 
     // 특정 이슈의 특정 댓글 하나 가져오기
-    @GetMapping("/issue/{issueNum}/comments/{commentId}")
+    @GetMapping("/{issueNum}/comments/{commentId}")
     public Optional<Comment> getCommentById(@PathVariable Long issueNum, @PathVariable long commentId) {
         // 여기서는 단순히 ID로 댓글을 찾는 것으로 가정합니다.
         return commentRepository.findById(commentId);
     }
 
     // 새로운 댓글 추가하기
-    @PostMapping("/issue/{issueNum}/comments")
+    @PostMapping("/{issueNum}/comments")
     public ResponseEntity<Map<String, Object>> uploadComment(@RequestBody CommentDto commentDto) {
         Optional<Issue> issueOpt = issueRepository.findById(commentDto.getIssueNum());
         System.out.println("check issue: " + issueOpt);
