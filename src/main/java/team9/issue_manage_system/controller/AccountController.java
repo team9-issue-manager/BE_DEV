@@ -28,8 +28,6 @@ public class AccountController {
         return accountService.findUser(account);
     }
 
-    //@G
-
     /**
      * ID 중복 여부 확인 : 존재하면 true, 새로운 경우 false
      * @param account : Account타입의 클래스 (이 부분은 수정 필요 : ID체크에는 Password가 없으므로)

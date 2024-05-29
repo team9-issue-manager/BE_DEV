@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Data
@@ -34,6 +35,9 @@ public class Issue {
 
     public String tag;
 
+
+    @OneToMany(mappedBy = "issue", fetch = FetchType.EAGER)
+    private Set<Comment> comments;
 
     public Issue() {}
 

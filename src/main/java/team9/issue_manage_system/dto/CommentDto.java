@@ -10,5 +10,5 @@ public class CommentDto {
     private Long issueNum;
     private String content;
     private Date date;
-    private String id;
+    private Long id;
 }
