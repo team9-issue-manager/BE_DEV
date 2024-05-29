@@ -8,7 +8,8 @@ import java.util.Date;
 @Data
 public class CommentDto {
     private Long issueNum;
+    private String title;
     private String content;
     private Date date;
-    private Long id;
+    private String accountId;
 }

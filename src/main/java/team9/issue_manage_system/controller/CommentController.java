@@ -26,21 +26,26 @@ public class CommentController {
     final private IssueRepository issueRepository;
 
     //특정 이슈의 모든 댓글 가져오기
+//    @GetMapping("/{issueNum}/comments")
+//    public List<CommentDto> getCommentsByIssueId(@PathVariable Long issueNum) {
+//        List<Comment> comments = commentRepository.findByIssue_IssueNum(issueNum);
+//        return comments.stream()
+//                .map(this::convertToDto)
+//                .collect(Collectors.toList());
+//    }
+//
+//    private CommentDto convertToDto(Comment comment) {
+//        CommentDto commentDto = new CommentDto();
+//        commentDto.setIssueNum(comment.getIssue().getIssueNum());
+//        commentDto.setContent(comment.getContent());
+//        commentDto.setTitle(comment.getTitle());
+//        commentDto.setAccountId(comment.getAccount().getId());
+//        return commentDto;
+//    }
     @GetMapping("/{issueNum}/comments")
-    public List<CommentDto> getCommentsByIssueId(@PathVariable Long issueNum) {
-        List<Comment> comments = commentRepository.findByIssue_IssueNum(issueNum);
-        return comments.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
-
-    private CommentDto convertToDto(Comment comment) {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setIssueNum(comment.getIssue().getIssueNum());
-        commentDto.setContent(comment.getContent());
-        commentDto.setDate(comment.getDate());
-        commentDto.setId(comment.getCommentId());
-        return commentDto;
+    public List<Comment> getCommentsByIssueId(@PathVariable Long issueNum) {
+        List<Comment> comments = commentRepository.findAllByIssue_IssueNum(issueNum);
+        return comments;
     }
 
     // 특정 이슈의 특정 댓글 하나 가져오기
