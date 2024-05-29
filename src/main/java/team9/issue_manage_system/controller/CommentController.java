@@ -44,7 +44,7 @@ public class CommentController {
 //    }
     @GetMapping("/{issueNum}/comments")
     public ResponseEntity<Map<String, Object>> getCommentsByIssueId(@PathVariable Long issueNum) {
-        List<Comment> comments = commentRepository.findAllByIssue_IssueNum(issueNum);
+        List<Comment> comments = commentRepository.findByIssue_IssueNum(issueNum);
         Map<String, Object> response = new HashMap<>();
         response.put("success", comments);
         return ResponseEntity.ok(response);
