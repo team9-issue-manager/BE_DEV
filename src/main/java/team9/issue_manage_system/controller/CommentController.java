@@ -1,5 +1,6 @@
 package team9.issue_manage_system.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +18,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 public class CommentController {
 
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private IssueRepository issueRepository;
+    final private CommentRepository commentRepository;
+    final private IssueRepository issueRepository;
 
     //특정 이슈의 모든 댓글 가져오기
     @GetMapping("/issue/{issueNum}/comments")
