@@ -29,6 +29,10 @@ public class Comment {
     @JoinColumn(name = "issueNum", referencedColumnName = "issueNum")
     private Issue issue;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "accountId", referencedColumnName = "id")
+    private Account account;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;

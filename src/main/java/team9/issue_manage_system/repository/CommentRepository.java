@@ -7,6 +7,6 @@ import team9.issue_manage_system.entity.Issue;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByIssue_IssueNum(Long issueNum);
+    List<Comment> findAllByIssue_IssueNum(Long issueNum);
 
 }
