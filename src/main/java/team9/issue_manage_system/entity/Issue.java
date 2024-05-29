@@ -38,9 +38,6 @@ public class Issue {
     @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Comment> comments;
 
-    @OneToMany(mappedBy = "issue", fetch = FetchType.EAGER)
-    private Set<Comment> comments;
-
     public Issue() {}
 
     public Issue(String title, String content){
