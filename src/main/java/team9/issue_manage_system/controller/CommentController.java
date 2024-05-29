@@ -43,9 +43,11 @@ public class CommentController {
 //        return commentDto;
 //    }
     @GetMapping("/{issueNum}/comments")
-    public List<Comment> getCommentsByIssueId(@PathVariable Long issueNum) {
+    public ResponseEntity<Map<String, Object>> getCommentsByIssueId(@PathVariable Long issueNum) {
         List<Comment> comments = commentRepository.findAllByIssue_IssueNum(issueNum);
-        return comments;
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", comments);
+        return ResponseEntity.ok(response);
     }
 
     // 특정 이슈의 특정 댓글 하나 가져오기
