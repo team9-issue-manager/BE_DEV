@@ -11,5 +11,6 @@ public class IssueDto {
     private String title;
     private String content;
     private String accountId;
+    private Long projectNum;
     private String tag;
 }

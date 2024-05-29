@@ -1,5 +1,6 @@
 package team9.issue_manage_system.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,20 +10,19 @@ import team9.issue_manage_system.dto.IssueDto;
 import team9.issue_manage_system.dto.IssueSearchDto;
 import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.entity.Issue;
+import team9.issue_manage_system.entity.Project;
 import team9.issue_manage_system.repository.AccountRepository;
 import team9.issue_manage_system.repository.IssueRepository;
+import team9.issue_manage_system.repository.ProjectRepository;
 
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class IssueService {
     private final IssueRepository issueRepository;
     private final AccountRepository accountRepository;
-
-    public IssueService(IssueRepository issueRepository, AccountRepository accountRepository) {
-        this.issueRepository = issueRepository;
-        this.accountRepository = accountRepository;
-    }
+    private final ProjectRepository projectRepository;
 
     public ResponseEntity<Map<String, Object>> searchIssueByFilter(IssueSearchDto issueSearchDto) {
         String filterValue = issueSearchDto.getFilter();
@@ -48,6 +48,7 @@ public class IssueService {
 
     public ResponseEntity<Map<String, Object>> uploadIssue(IssueDto issueDto) {
         Optional<Account> accountOpt = accountRepository.findById(issueDto.getAccountId());
+        Optional<Project> projectOpt = projectRepository.findById(issueDto.getProjectNum());
         Map<String, Object> response = new HashMap<>();
 
         if (accountOpt.isPresent()) {

@@ -1,5 +1,6 @@
 package team9.issue_manage_system.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,12 +11,10 @@ import team9.issue_manage_system.repository.AccountRepository;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
 
-    public AccountService(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    };
     public void printAccount(Account account) {
         System.out.println("USER INPUT DETECTED");
         System.out.println("INPUT ACCOUNT ID : " + account.getId());
