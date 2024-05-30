@@ -1,4 +1,5 @@
 package team9.issue_manage_system.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class Issue {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "accountId", referencedColumnName = "id")
     // private String accountId; //writer -> 위의 왜래키 관계를 통해 issue table에 accountId 자동으로 생성
+    @JsonIgnore
     private Account account;
 
     @ManyToOne(fetch = FetchType.EAGER)
