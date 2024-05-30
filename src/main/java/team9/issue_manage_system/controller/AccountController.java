@@ -70,15 +70,16 @@ public class AccountController {
 
     // 회원가입
     @PostMapping("/add")
-    public ResponseEntity<Map<String, Boolean>> addAccount(@RequestBody Account account){
+    public ResponseEntity<Map<String, Object>> addAccount(@RequestBody Account account){
         accountService.printAccount(account);
         boolean success = accountService.uploadAccount(account);
-        Map<String, Boolean> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
         if (success) {
             response.put("success", true);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } else {
             response.put("success", false);
+            response.put("errorString", "해당하는 아이디가 이미 존재합니다.");
             return ResponseEntity.ok(response);
         }
     }
