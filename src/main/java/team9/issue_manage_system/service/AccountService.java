@@ -44,12 +44,15 @@ public class AccountService {
     }
 
     public boolean uploadAccount(Account account) {
-        if (!accountRepository.existsById(account.getId())) {
+        Optional<Account> foundAccount = accountRepository.findById(account.getId());
+        if (foundAccount.isEmpty()) {
             Account newAccount = new Account(account.getId(), account.getPassword(), "tester"); // 생성할 떼는 일단 tester로 생성.
             accountRepository.save(newAccount);
 
+            if (account.getRole().equals("tester"))
+                return true;
             AdminAuth adminAuth = new AdminAuth();
-            adminAuth.setRequestAccount(account);
+            adminAuth.setRequestAccount(newAccount);
             adminAuth.setRole(account.getRole());
             adminAuthRepository.save(adminAuth);
             return true;
