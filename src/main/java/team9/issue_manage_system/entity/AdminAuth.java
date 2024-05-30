@@ -10,11 +10,11 @@ import team9.issue_manage_system.repository.AccountRepository;
 public class AdminAuth {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long requestNum;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "accountId", referencedColumnName = "id")
     private Account requestAccount;
 
     private String role;

@@ -52,12 +52,13 @@ public class IssueService {
         Optional<Project> projectOpt = projectRepository.findById(issueDto.getProjectNum());
         Map<String, Object> response = new HashMap<>();
 
-        if (accountOpt.isPresent()) {
+        if (accountOpt.isPresent() && projectOpt.isPresent()) {
             Account account = accountOpt.get();
             Issue issue = new Issue();
             issue.setTitle(issueDto.getTitle());
             issue.setContent(issueDto.getContent());
             issue.setAccount(account);
+            issue.setProject(projectOpt.get());
             issue.setTag(issueDto.getTag());
             issue.setState(0); // 기본값을 0으로 설정
 
