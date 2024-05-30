@@ -37,6 +37,8 @@ public class AccountService {
 
 
     public List<Account> findUserByAccount(String role) {
+        System.out.println(role);
+        //accountRepository
         return accountRepository.findAllByRole(role);
     }
 
@@ -73,10 +75,8 @@ public class AccountService {
     public boolean updateUserRole(Account account) {
         Optional<Account> foundAccount = accountRepository.findById(account.getId());
         if (foundAccount.isPresent()) {
-            Account account1 = foundAccount.get();
-            account1.setRole(account.getRole());
-            accountRepository.save(account1);
-            return true;
+            int number = accountRepository.updateUserRole(foundAccount.get().getId(), account.getRole());
+            return (number > 0);
         }
         return false;
     }
