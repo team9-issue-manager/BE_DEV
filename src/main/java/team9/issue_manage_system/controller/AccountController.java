@@ -81,7 +81,7 @@ public class AccountController {
         } else {
             response.put("success", false);
             response.put("errorString", "해당하는 아이디가 이미 존재합니다.");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         }
     }
 

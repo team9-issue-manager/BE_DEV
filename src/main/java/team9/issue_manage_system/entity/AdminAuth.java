@@ -2,7 +2,6 @@ package team9.issue_manage_system.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import team9.issue_manage_system.repository.AccountRepository;
 
 //Admin이 받아서 처리할 권한 수정 알림 엔티티
 @Entity

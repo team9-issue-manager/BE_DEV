@@ -28,17 +28,15 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "issueNum", referencedColumnName = "issueNum")
-    @JsonBackReference
     private Issue issue;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "accountId", referencedColumnName = "id")
-    @JsonBackReference
     private Account account;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    public Comment() {};
+    public Comment() {}
 }
