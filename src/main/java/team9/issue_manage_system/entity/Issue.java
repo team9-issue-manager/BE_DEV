@@ -1,6 +1,7 @@
 package team9.issue_manage_system.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,16 +23,19 @@ public class Issue {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "accountId", referencedColumnName = "id")
+    @JsonBackReference
     // private String accountId; //writer -> 위의 왜래키 관계를 통해 issue table에 accountId 자동으로 생성
     @JsonIgnore
     private Account account;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "devId", referencedColumnName = "id")
+    @JsonBackReference
     private Account developer;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "projectNum", referencedColumnName = "projectNum")
+    @JsonBackReference
     private Project project;
 
     private Integer state = 0; // 0:new, 1:assigned, 2:fixed, 3:resolved, 4:closed
@@ -43,6 +47,7 @@ public class Issue {
     public String tag;
 
     @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonBackReference
     private Set<Comment> comments;
 
     public Issue() {}

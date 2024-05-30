@@ -22,17 +22,24 @@ public class IssueService {
     private final ProjectRepository projectRepository;
 
     public ResponseEntity<Map<String, Object>> searchIssueByFilter(IssueSearchDto issueSearchDto) {
+        System.out.println(issueSearchDto);
+
         String filterValue = issueSearchDto.getFilter();
         Map<String, Object> response = new HashMap<>();
         List<Issue> issueList = Collections.emptyList();
 
         if (filterValue.equals("title")) {
             issueList = issueRepository.findAllByTitleContaining(issueSearchDto.getValue());
-        } else if (filterValue.equals("tag")) {
+        }
+        else if (filterValue.equals("tag")) {
             issueList = issueRepository.findAllByTagContaining(issueSearchDto.getValue());
-        } else if (filterValue.equals("writer")) {
+        }
+        else if (filterValue.equals("writer")) {
             issueList = issueRepository.findAllByAccountIdContaining(issueSearchDto.getValue());
         }
+        System.out.println(issueList);
+        // Dto를 이용해서 return 하기
+
 
         response.put("success", !issueList.isEmpty());
         response.put("issues", issueList);
@@ -45,6 +52,7 @@ public class IssueService {
 
 
     public ResponseEntity<Map<String, Object>> uploadIssue(IssueDto issueDto) {
+        System.out.println(issueDto);
         Optional<Account> accountOpt = accountRepository.findById(issueDto.getAccountId());
         Optional<Project> projectOpt = projectRepository.findById(issueDto.getProjectNum());
         Map<String, Object> response = new HashMap<>();

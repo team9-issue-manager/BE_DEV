@@ -48,6 +48,7 @@ public class AccountService {
 
     @Transactional
     public boolean uploadAccount(Account account) {
+        System.out.println(account);
         Optional<Account> foundAccount = accountRepository.findById(account.getId());
         if (foundAccount.isEmpty()) {
             Account newAccount = new Account(account.getId(), account.getPassword(), "tester"); // 생성할 떼는 일단 tester로 생성.
