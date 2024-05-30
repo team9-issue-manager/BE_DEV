@@ -19,13 +19,6 @@ public class Account {
         this.role = role; //
     }
 
-    public Account(String id, String password) {
-        this.id = id;
-        this.password = password;
-        this.role = "tester";
-        //if (mode > 0) mode += 1; // 나중에 수정
-    }
-
     @Id
     private String id;
 

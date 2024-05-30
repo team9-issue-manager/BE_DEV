@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team9.issue_manage_system.entity.Account;
+import team9.issue_manage_system.entity.AdminAuth;
 import team9.issue_manage_system.service.AccountService;
 
 import java.util.*;

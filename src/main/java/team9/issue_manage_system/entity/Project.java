@@ -35,5 +35,5 @@ public class Project {
         this.title = title;
     }
 
-    public Project() {};
+    public Project() {}
 }
