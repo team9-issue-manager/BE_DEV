@@ -1,5 +1,6 @@
 package team9.issue_manage_system.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import team9.issue_manage_system.entity.Account;
@@ -43,6 +44,7 @@ public class AccountService {
         return accountRepository.existsById(account.getId());
     }
 
+    @Transactional
     public boolean uploadAccount(Account account) {
         Optional<Account> foundAccount = accountRepository.findById(account.getId());
         if (foundAccount.isEmpty()) {
@@ -53,9 +55,9 @@ public class AccountService {
                 return true;
             try {
                 AdminAuth adminAuth = new AdminAuth();
-                adminAuth.setId(newAccount.getId()); // newAccount의 기본 키를 adminAuth의 기본 키로 설정
                 adminAuth.setRequestAccount(newAccount);
                 adminAuth.setRole(account.getRole());
+                System.out.println(adminAuth);
                 adminAuthRepository.save(adminAuth);
                 return true;
             }
