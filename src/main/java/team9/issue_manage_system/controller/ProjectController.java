@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import team9.issue_manage_system.dto.ProjectDto;
-import team9.issue_manage_system.entity.Account;
+import team9.issue_manage_system.dto.ProjectCreateDto;
+import team9.issue_manage_system.dto.ProjectDeleteDto;
 import team9.issue_manage_system.entity.Project;
 import team9.issue_manage_system.service.ProjectService;
 
@@ -24,9 +24,9 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>> uploadProject(@RequestBody ProjectDto projectDto) {
+    public ResponseEntity<Map<String, Object>> uploadProject(@RequestBody ProjectCreateDto projectCreateDto) {
         Map<String, Object> response = new HashMap<>();
-        Optional<Project> project = projectService.projectCreate(projectDto);
+        Optional<Project> project = projectService.projectCreate(projectCreateDto);
 
         if (project.isPresent()) {
             response.put("success", true);
@@ -38,5 +38,16 @@ public class ProjectController {
         }
     }
 
-    //@PostMapping("/")
+    @PostMapping("/delete")
+    public ResponseEntity<Map<String, Object>> deleteProject(@RequestBody ProjectDeleteDto projectDeleteDto) {
+        Map<String, Object> response = new HashMap<>();
+        boolean checkProject = projectService.projectDelete(projectDeleteDto);
+
+        if (checkProject) {
+            response.put("success", true);
+            return ResponseEntity.ok(response);
+        }
+        response.put("success", false);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 }
