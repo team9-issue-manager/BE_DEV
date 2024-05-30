@@ -22,17 +22,23 @@ public class IssueService {
     private final ProjectRepository projectRepository;
 
     public ResponseEntity<Map<String, Object>> searchIssueByFilter(IssueSearchDto issueSearchDto) {
+        System.out.println(issueSearchDto);
         String filterValue = issueSearchDto.getFilter();
         Map<String, Object> response = new HashMap<>();
         List<Issue> issueList = Collections.emptyList();
 
+        System.out.println(issueSearchDto);
+
         if (filterValue.equals("title")) {
             issueList = issueRepository.findAllByTitleContaining(issueSearchDto.getValue());
-        } else if (filterValue.equals("tag")) {
+        }
+        else if (filterValue.equals("tag")) {
             issueList = issueRepository.findAllByTagContaining(issueSearchDto.getValue());
-        } else if (filterValue.equals("writer")) {
+        }
+        else if (filterValue.equals("writer")) {
             issueList = issueRepository.findAllByAccountIdContaining(issueSearchDto.getValue());
         }
+        System.out.println(issueList);
 
         response.put("success", !issueList.isEmpty());
         response.put("issues", issueList);
