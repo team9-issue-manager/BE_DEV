@@ -14,7 +14,7 @@ public class AdminAuth {
 
     @MapsId
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private Account requestAccount;
 
     private String role;

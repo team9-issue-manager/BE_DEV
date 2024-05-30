@@ -10,6 +10,7 @@ import team9.issue_manage_system.dto.IssueSearchDto;
 import team9.issue_manage_system.entity.Issue;
 import team9.issue_manage_system.service.IssueService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +27,11 @@ public class IssueController {
     }
 
     @GetMapping("/list")
-    public List<Issue> issueListAll() {
-        return issueService.issueListAll();
+    public ResponseEntity<Map<String, Object>> issueListAll() {
+        List<Issue> issues = issueService.issueListAll();
+        Map<String, Object> response = new HashMap<>();
+        response.put("issues", issues);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/add")

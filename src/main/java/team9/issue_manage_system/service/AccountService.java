@@ -51,11 +51,19 @@ public class AccountService {
 
             if (account.getRole().equals("tester"))
                 return true;
-            AdminAuth adminAuth = new AdminAuth();
-            adminAuth.setRequestAccount(newAccount);
-            adminAuth.setRole(account.getRole());
-            adminAuthRepository.save(adminAuth);
-            return true;
+            try {
+                AdminAuth adminAuth = new AdminAuth();
+                adminAuth.setId(newAccount.getId()); // newAccount의 기본 키를 adminAuth의 기본 키로 설정
+                adminAuth.setRequestAccount(newAccount);
+                adminAuth.setRole(account.getRole());
+                adminAuthRepository.save(adminAuth);
+                return true;
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                return false;
+            }
         }
         return false;
     }
