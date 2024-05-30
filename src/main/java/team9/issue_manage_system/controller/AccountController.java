@@ -75,10 +75,10 @@ public class AccountController {
         boolean success = accountService.uploadAccount(account);
         Map<String, Boolean> response = new HashMap<>();
         if (success) {
-            response.put("success", false);
+            response.put("success", true);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } else {
-            response.put("success", true);
+            response.put("success", false);
             return ResponseEntity.ok(response);
         }
     }
@@ -90,10 +90,10 @@ public class AccountController {
         boolean success = accountService.updateUserRole(account);
         Map<String, Boolean> response = new HashMap<>();
         if (success) {
-            response.put("success", false);
+            response.put("success", true);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } else {
-            response.put("success", true);
+            response.put("success", false);
             return ResponseEntity.ok(response);
         }
     }
