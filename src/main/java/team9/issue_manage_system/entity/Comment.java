@@ -1,6 +1,7 @@
 package team9.issue_manage_system.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,10 +28,12 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "issueNum", referencedColumnName = "issueNum")
+    @JsonBackReference
     private Issue issue;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "accountId", referencedColumnName = "id")
+    @JsonBackReference
     private Account account;
 
     @CreationTimestamp
