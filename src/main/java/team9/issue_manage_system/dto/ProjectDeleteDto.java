@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class ProjectDeleteDto {
     private String adminId;
-    private Long ProjectNum;
+    private Long projectNum;
 }

@@ -19,7 +19,7 @@ import java.util.Map;
 @RequestMapping("/admin")
 public class AdminAuthController {
 
-    private AdminAuthService adminAuthService;
+    private final AdminAuthService adminAuthService;
 
     @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> adminAuthListAll() {

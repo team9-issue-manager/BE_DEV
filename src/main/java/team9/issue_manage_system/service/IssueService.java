@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import team9.issue_manage_system.dto.IssueAssignDevAutoDto;
-import team9.issue_manage_system.dto.IssueAssignDevDto;
-import team9.issue_manage_system.dto.IssueDto;
-import team9.issue_manage_system.dto.IssueSearchDto;
+import team9.issue_manage_system.dto.*;
 import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.entity.Issue;
 import team9.issue_manage_system.entity.Project;
@@ -61,10 +58,20 @@ public class IssueService {
             issue.setProject(projectOpt.get());
             issue.setTag(issueDto.getTag());
             issue.setState(0); // 기본값을 0으로 설정
-
             issueRepository.save(issue);
+
+            IssueReturnDto issueReturnDto = new IssueReturnDto();
+            issueReturnDto.setIssueNum(issue.getIssueNum());
+            issueReturnDto.setTitle(issue.getTitle());
+            issueReturnDto.setContent(issue.getContent());
+            issueReturnDto.setAccountId(issue.getAccount().getId());
+            issueReturnDto.setProjectNum(issue.getProject().getProjectNum());
+            issueReturnDto.setState(issue.getState());
+            issueReturnDto.setDate(issue.getDate());
+            issueReturnDto.setTag(issue.getTag());
+
             response.put("success", true);
-            response.put("issue", issue);
+            response.put("issue", issueReturnDto);
             return ResponseEntity.ok(response);
         } else {
             response.put("result", "이슈를 생성할 수 없습니다."); // 실패 시.

@@ -24,7 +24,6 @@ public class ProjectService {
 
     public Optional<Project> projectCreate(ProjectCreateDto projectCreateDto) {
         Optional<Account> accountOpt = accountRepository.findById(projectCreateDto.getPlId());
-        System.out.println("check account: " +  accountOpt);
 
         if (accountOpt.isPresent() && accountOpt.get().getRole().equals("pl")) {
             Account account = accountOpt.get();
@@ -40,9 +39,10 @@ public class ProjectService {
 
     public boolean projectDelete(ProjectDeleteDto projectDeleteDto) {
         Optional<Account> accountOpt = accountRepository.findById(projectDeleteDto.getAdminId());
+        Optional<Project> projectOpt = projectRepository.findById(projectDeleteDto.getProjectNum());
         System.out.println("check account: " +  accountOpt);
 
-        if (accountOpt.isPresent() && accountOpt.get().getRole().equals("admin")) {
+        if (accountOpt.isPresent() && accountOpt.get().getRole().equals("admin") && projectOpt.isPresent()) {
             projectRepository.deleteById(projectDeleteDto.getProjectNum());
             return true;
         }

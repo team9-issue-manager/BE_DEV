@@ -21,13 +21,14 @@ import java.util.Optional;
 @RequiredArgsConstructor // final이 선언된 모든 필드를 인자값으로 하는 생성자를 자동(대신) 생성
 @RequestMapping("/project")
 public class ProjectController {
+
     private final ProjectService projectService;
 
     @PostMapping("/create")
     public ResponseEntity<Map<String, Object>> uploadProject(@RequestBody ProjectCreateDto projectCreateDto) {
         Map<String, Object> response = new HashMap<>();
+        System.out.println(projectCreateDto);
         Optional<Project> project = projectService.projectCreate(projectCreateDto);
-
         if (project.isPresent()) {
             response.put("success", true);
             response.put("project", project);
