@@ -66,7 +66,7 @@ public class IssueService {
             response.put("issue", issue);
             return ResponseEntity.ok(response);
         } else {
-            response.put("success", false);
+            response.put("result", "이슈를 생성할 수 없습니다."); // 실패 시.
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
