@@ -13,6 +13,7 @@ import team9.issue_manage_system.repository.IssueRepository;
 import team9.issue_manage_system.repository.ProjectRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -173,5 +174,35 @@ public class IssueService {
         response.put("success", true);
         return ResponseEntity.ok(response);
     }
+
+    public IssueStatisticsDto getIssueStatistics() {
+        Long totalIssues = issueRepository.count();
+
+        Map<String, Long> issuesByStatus = issueRepository.findAll()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        issue -> {
+                            switch (issue.getState()) {
+                                case 0: return "new";
+                                case 1: return "assigned";
+                                case 2: return "fixed";
+                                case 3: return "resolved";
+                                case 4: return "closed";
+                                default: return "unknown";
+                            }
+                        }, Collectors.counting()
+                ));
+
+        Map<String, Long> issuesByDeveloper = issueRepository.findAll()
+                .stream()
+                .filter(issue -> issue.getDeveloper() != null)
+                .collect(Collectors.groupingBy(
+                        issue -> issue.getDeveloper().getId(),
+                        Collectors.counting()
+                ));
+
+        return new IssueStatisticsDto(totalIssues, issuesByStatus, issuesByDeveloper);
+    }
+
 }
 

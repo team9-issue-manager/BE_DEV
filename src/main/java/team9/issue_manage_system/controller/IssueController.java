@@ -48,5 +48,11 @@ public class IssueController {
     public ResponseEntity<Map<String, Object>> assignDevAuto(@RequestBody IssueAssignDevAutoDto issueAssignDevAuto) {
         return issueService.assignDevAuto(issueAssignDevAuto);
     }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<IssueStatisticsDto> getIssueStatistics() {
+        IssueStatisticsDto statistics = issueService.getIssueStatistics();
+        return ResponseEntity.ok(statistics);
+    }
 }
 
