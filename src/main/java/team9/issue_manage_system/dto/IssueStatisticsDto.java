@@ -18,6 +18,7 @@ public class IssueStatisticsDto {
         this.totalIssues = totalIssues;
         this.issuesByStatus = issuesByStatus;
         this.issuesByDeveloper = issuesByDeveloper;
+
     }
 
 }
