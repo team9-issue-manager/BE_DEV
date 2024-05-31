@@ -12,6 +12,6 @@ import java.util.List;
 public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<Issue> findAllByTitleContaining(String title);
     List<Issue> findAllByTagContaining(String tag);
-    List<Issue> findAllByAccountIdContaining(String accountId);
+    List<Issue> findALLByAccount_Id(String accountId);
     int countByDeveloperAndStateBetween(Account developer, int startState, int endState);
 }

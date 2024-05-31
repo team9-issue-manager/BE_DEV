@@ -35,8 +35,8 @@ public class IssueController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Map<String, Object>> uploadIssue(@RequestBody IssueDto issueDto) {
-        return issueService.uploadIssue(issueDto);
+    public ResponseEntity<Map<String, Object>> uploadIssue(@RequestBody IssueCreateDto issueCreateDto) {
+        return issueService.uploadIssue(issueCreateDto);
     }
 
     @PostMapping("/assignDev")
