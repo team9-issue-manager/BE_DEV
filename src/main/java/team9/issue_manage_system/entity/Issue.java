@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Data// @Data 존재하니까 @Getter, @Setter 생략.
-@EqualsAndHashCode(exclude = {"account", "project"})
+@EqualsAndHashCode(exclude = {"comments", "account", "project"})
 public class Issue {
 
     @Id
@@ -33,7 +33,7 @@ public class Issue {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "projectNum", referencedColumnName = "projectNum")
-    @JsonBackReference
+    //@JsonBackReference
     private Project project;
 
     private Integer state = 0; // 0:new, 1:assigned, 2:fixed, 3:resolved, 4:closed
@@ -45,7 +45,7 @@ public class Issue {
     public String tag;
 
     @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    //@JsonManagedReference
     private Set<Comment> comments;
 
     public Issue() {}

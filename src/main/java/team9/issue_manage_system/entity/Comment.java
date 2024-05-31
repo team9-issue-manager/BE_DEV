@@ -4,6 +4,7 @@ package team9.issue_manage_system.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
@@ -11,23 +12,17 @@ import java.util.Date;
 
 @Entity
 @Data
+@EqualsAndHashCode(exclude = {"issue", "account"})
 public class Comment {
-
-    public Comment(String title, String content, Issue issue){
-        this.title = title;
-        this.content = content;
-        this.issue = issue;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 일단 long으로 해뒀는데, 만약 issue처럼 string으로 할거면 수정 필요
-    private Long commentId;
+    private Long commentNum;
 
-    private String title;
     private String content;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonBackReference
+    //@JsonBackReference
     @JoinColumn(name = "issueNum", referencedColumnName = "issueNum")
     private Issue issue;
 
