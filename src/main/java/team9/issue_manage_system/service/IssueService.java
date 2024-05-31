@@ -87,7 +87,7 @@ public class IssueService {
     }
 
 
-    private IssueReturnDto makeIssueReturnDto(Issue issue) {
+    public IssueReturnDto makeIssueReturnDto(Issue issue) {
         IssueReturnDto issueReturnDto = new IssueReturnDto();
         issueReturnDto.setIssueNum(issue.getIssueNum());
         issueReturnDto.setTitle(issue.getTitle());

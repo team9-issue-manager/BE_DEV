@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team9.issue_manage_system.dto.ProjectCreateDto;
 import team9.issue_manage_system.dto.ProjectDeleteDto;
+import team9.issue_manage_system.dto.ProjectReturnDto;
 import team9.issue_manage_system.entity.Project;
 import team9.issue_manage_system.service.ProjectService;
 
@@ -28,10 +29,10 @@ public class ProjectController {
     public ResponseEntity<Map<String, Object>> uploadProject(@RequestBody ProjectCreateDto projectCreateDto) {
         Map<String, Object> response = new HashMap<>();
         System.out.println(projectCreateDto);
-        Optional<Project> project = projectService.projectCreate(projectCreateDto);
-        if (project.isPresent()) {
+        Optional<ProjectReturnDto> projectReturnDto = projectService.projectCreate(projectCreateDto);
+        if (projectReturnDto.isPresent()) {
             response.put("success", true);
-            response.put("project", project);
+            response.put("project", projectReturnDto);
             return ResponseEntity.ok(response);
         } else {
             response.put("success", false);
