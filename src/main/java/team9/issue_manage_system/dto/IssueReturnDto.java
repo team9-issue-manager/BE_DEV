@@ -1,6 +1,8 @@
 package team9.issue_manage_system.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -13,6 +15,10 @@ public class IssueReturnDto {
     private Date date;
     private Integer state;
     private String accountId;
+
+    @JsonProperty(defaultValue = "")
+    private String devId;
+
     private Long projectNum;
     private String tag;
 
