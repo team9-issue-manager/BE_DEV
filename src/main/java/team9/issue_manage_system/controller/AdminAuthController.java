@@ -39,8 +39,11 @@ public class AdminAuthController {
     @PostMapping("/updateUserRole")
     public ResponseEntity<Map<String, Boolean>> updateUserRole(@RequestBody Account account) {
         boolean success = accountService.updateUserRole(account);
+        boolean delSuccess = false;
         Map<String, Boolean> response = new HashMap<>();
-        if (success) {
+        if (success)
+            delSuccess = adminAuthService.adminAuthDelete(account.getId());
+        if (delSuccess) {
             response.put("success", true);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } else {

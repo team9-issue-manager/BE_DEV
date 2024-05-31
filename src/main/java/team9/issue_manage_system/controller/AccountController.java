@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import team9.issue_manage_system.dto.AccountReturnDto;
 import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.entity.AdminAuth;
 import team9.issue_manage_system.service.AccountService;
@@ -42,7 +43,7 @@ public class AccountController {
 
     @GetMapping("/findByRole/{role}")
     public ResponseEntity<Map<String, Object>> findAccountByRole(@PathVariable String role) {
-        List<Account> accounts = accountService.findUserByAccount(role);
+        List<AccountReturnDto> accounts = accountService.findUserByAccount(role);
         Map<String, Object> response = new HashMap<>();
         if (accounts.isEmpty()) {
             response.put("success", false);

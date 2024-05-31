@@ -3,6 +3,7 @@ package team9.issue_manage_system.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import team9.issue_manage_system.dto.AccountReturnDto;
 import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.entity.AdminAuth;
 import team9.issue_manage_system.repository.AccountRepository;
@@ -36,10 +37,18 @@ public class AccountService {
     }
 
 
-    public List<Account> findUserByAccount(String role) {
+    public List<AccountReturnDto> findUserByAccount(String role) {
         System.out.println(role);
-        //accountRepository
-        return accountRepository.findAllByRole(role);
+
+        List<AccountReturnDto> accountReturnDtos = new ArrayList<>();
+        List<Account> accounts= accountRepository.findAllByRole(role);
+        for (Account account : accounts) {
+            AccountReturnDto accountReturnDto = new AccountReturnDto();
+            accountReturnDto.setId(account.getId());
+            accountReturnDto.setRole(account.getRole());
+            accountReturnDtos.add(accountReturnDto);
+        }
+        return accountReturnDtos;
     }
 
     public boolean findUserIdCheck(Account account) {
@@ -56,19 +65,12 @@ public class AccountService {
 
             if (account.getRole().equals("tester"))
                 return true;
-            try {
-                AdminAuth adminAuth = new AdminAuth();
-                adminAuth.setRequestAccount(newAccount);
-                adminAuth.setRole(account.getRole());
-                System.out.println(adminAuth);
-                adminAuthRepository.save(adminAuth);
-                return true;
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                return false;
-            }
+            AdminAuth adminAuth = new AdminAuth();
+            adminAuth.setRequestAccount(newAccount);
+            adminAuth.setRole(account.getRole());
+            System.out.println(adminAuth);
+            adminAuthRepository.save(adminAuth);
+            return true;
         }
         return false;
     }

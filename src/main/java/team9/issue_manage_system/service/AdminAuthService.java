@@ -7,6 +7,7 @@ import team9.issue_manage_system.entity.AdminAuth;
 import team9.issue_manage_system.repository.AdminAuthRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,5 +17,14 @@ public class AdminAuthService {
 
     public List<AdminAuth> adminAuthListAll() {
         return adminAuthRepository.findAll();
+    }
+
+    public boolean adminAuthDelete(String id) {
+        Optional<AdminAuth> adminAuth = adminAuthRepository.findByRequestAccount_Id(id);
+        if (adminAuth.isPresent()) {
+            adminAuthRepository.deleteById(adminAuth.get().getRequestNum());
+            return true;
+        }
+        return false;
     }
 }
