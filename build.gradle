@@ -26,6 +26,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-groovy-templates'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	// SLF4J API
+	implementation 'org.slf4j:slf4j-api:2.0.7'
+	// Logback for logging implementation
+	implementation 'ch.qos.logback:logback-classic:1.4.6'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
