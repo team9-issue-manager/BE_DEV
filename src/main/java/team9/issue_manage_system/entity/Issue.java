@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Entity
 @Data
 // @Data 존재하니까 @Getter, @Setter 생략.
+@EqualsAndHashCode(exclude = {"account"})
 public class Issue {
 
     @Id
@@ -23,7 +25,6 @@ public class Issue {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "accountId", referencedColumnName = "id")
-    // private String accountId; //writer -> 위의 왜래키 관계를 통해 issue table에 accountId 자동으로 생성
     private Account account;
 
     @ManyToOne(fetch = FetchType.EAGER)

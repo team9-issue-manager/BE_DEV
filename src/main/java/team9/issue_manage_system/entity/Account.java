@@ -3,6 +3,7 @@ package team9.issue_manage_system.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 @Data
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = {"issues"})
 public class Account {
 
     public Account(String id, String password, String role){
