@@ -3,11 +3,7 @@ package team9.issue_manage_system.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import team9.issue_manage_system.dto.IssueAssignDevAutoDto;
-import team9.issue_manage_system.dto.IssueAssignDevDto;
-import team9.issue_manage_system.dto.IssueDto;
-import team9.issue_manage_system.dto.IssueSearchDto;
-import team9.issue_manage_system.entity.Issue;
+import team9.issue_manage_system.dto.*;
 import team9.issue_manage_system.service.IssueService;
 
 import java.util.HashMap;
@@ -23,14 +19,18 @@ public class IssueController {
 
     @PostMapping("/find")
     public ResponseEntity<Map<String, Object>> searchIssueByFilter(@RequestBody IssueSearchDto issueSearchDto) {
-        return issueService.searchIssueByFilter(issueSearchDto);
+        Map<String, Object> response = new HashMap<>();
+        List<IssueReturnDto> issueReturnDto = issueService.searchIssueByFilter(issueSearchDto);
+        response.put("success", !issueReturnDto.isEmpty());
+        response.put("issues", issueReturnDto);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> issueListAll() {
-        List<Issue> issues = issueService.issueListAll();
+        List<IssueReturnDto> issueReturnDtos = issueService.issueListAll();
         Map<String, Object> response = new HashMap<>();
-        response.put("issues", issues);
+        response.put("issues", issueReturnDtos);
         return ResponseEntity.ok(response);
     }
 

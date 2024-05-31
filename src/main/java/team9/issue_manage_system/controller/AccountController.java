@@ -84,19 +84,4 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         }
     }
-
-    // admin의 user 권한 수정
-    @PostMapping("/admin/updateUserRole")
-    public ResponseEntity<Map<String, Boolean>> updateUserRole(@RequestBody Account account) {
-        accountService.printAccount(account);
-        boolean success = accountService.updateUserRole(account);
-        Map<String, Boolean> response = new HashMap<>();
-        if (success) {
-            response.put("success", true);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } else {
-            response.put("success", false);
-            return ResponseEntity.ok(response);
-        }
-    }
 }

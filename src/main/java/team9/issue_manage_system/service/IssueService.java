@@ -21,12 +21,12 @@ public class IssueService {
     private final AccountRepository accountRepository;
     private final ProjectRepository projectRepository;
 
-    public ResponseEntity<Map<String, Object>> searchIssueByFilter(IssueSearchDto issueSearchDto) {
+    public List<IssueReturnDto> searchIssueByFilter(IssueSearchDto issueSearchDto) {
         System.out.println(issueSearchDto);
 
         String filterValue = issueSearchDto.getFilter();
-        Map<String, Object> response = new HashMap<>();
         List<Issue> issueList = Collections.emptyList();
+        List<IssueReturnDto> issueReturnDtos = new ArrayList<>();
 
         if (filterValue.equals("title")) {
             issueList = issueRepository.findAllByTitleContaining(issueSearchDto.getValue());
@@ -38,18 +38,24 @@ public class IssueService {
             issueList = issueRepository.findAllByAccountIdContaining(issueSearchDto.getValue());
         }
         System.out.println(issueList);
-        // Dto를 이용해서 return 하기
 
-
-        response.put("success", !issueList.isEmpty());
-        response.put("issues", issueList);
-        return ResponseEntity.ok(response);
+        for (Issue issue : issueList){
+            IssueReturnDto dto = makeIssueReturnDto(issue);
+            issueReturnDtos.add(dto);
+        }
+        return issueReturnDtos;
     }
 
-    public List<Issue> issueListAll() {
-        return issueRepository.findAll();
-    }
+    public List<IssueReturnDto> issueListAll() {
+        List<Issue> issues = issueRepository.findAll();
+        List<IssueReturnDto> issueReturnDtos = new ArrayList<>();
+        for (Issue issue : issues){
+            IssueReturnDto dto = makeIssueReturnDto(issue);
+            issueReturnDtos.add(dto);
+        }
 
+        return issueReturnDtos;
+    }
 
     public ResponseEntity<Map<String, Object>> uploadIssue(IssueDto issueDto) {
         System.out.println(issueDto);
@@ -68,15 +74,7 @@ public class IssueService {
             issue.setState(0); // 기본값을 0으로 설정
             issueRepository.save(issue);
 
-            IssueReturnDto issueReturnDto = new IssueReturnDto();
-            issueReturnDto.setIssueNum(issue.getIssueNum());
-            issueReturnDto.setTitle(issue.getTitle());
-            issueReturnDto.setContent(issue.getContent());
-            issueReturnDto.setAccountId(issue.getAccount().getId());
-            issueReturnDto.setProjectNum(issue.getProject().getProjectNum());
-            issueReturnDto.setState(issue.getState());
-            issueReturnDto.setDate(issue.getDate());
-            issueReturnDto.setTag(issue.getTag());
+            IssueReturnDto issueReturnDto = makeIssueReturnDto(issue);
 
             response.put("success", true);
             response.put("issue", issueReturnDto);
@@ -86,6 +84,27 @@ public class IssueService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+
+
+    private IssueReturnDto makeIssueReturnDto(Issue issue) {
+        IssueReturnDto issueReturnDto = new IssueReturnDto();
+        issueReturnDto.setIssueNum(issue.getIssueNum());
+        issueReturnDto.setTitle(issue.getTitle());
+        issueReturnDto.setContent(issue.getContent());
+        issueReturnDto.setAccountId(issue.getAccount().getId());
+        issueReturnDto.setProjectNum(issue.getProject().getProjectNum());
+        issueReturnDto.setState(issue.getState());
+        issueReturnDto.setDate(issue.getDate());
+        issueReturnDto.setTag(issue.getTag());
+
+        // Null check for devId
+        if (issue.getDeveloper() != null) {
+            issueReturnDto.setDevId(issue.getDeveloper().getId());
+        }
+
+        return issueReturnDto;
+    }
+
 
     public ResponseEntity<Map<String, Object>> assignDev(IssueAssignDevDto request) {
         Optional<Issue> issueOpt = issueRepository.findById(request.getIssueNum());
