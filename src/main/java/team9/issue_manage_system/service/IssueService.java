@@ -39,17 +39,13 @@ public class IssueService {
         else if (filterValue.equals("writer")) {
             issueList = issueRepository.findALLByAccount_Id(issueSearchDto.getValue());
         }
-        for (Issue issue : issueList) {
-            Hibernate.initialize(issue.getProject()); // Project 엔티티 초기화
-            if (issue.getProject() != null) {
-                Hibernate.initialize(issue.getProject().getIssues()); // Project 엔티티의 Issues 컬렉션 초기화
+        if (!issueList.isEmpty())
+        {
+            for (Issue issue : issueList){
+                IssueReturnDto dto = makeIssueReturnDto(issue);
+                issueReturnDtos.add(dto);
             }
         }
-        for (Issue issue : issueList){
-            IssueReturnDto dto = makeIssueReturnDto(issue);
-            issueReturnDtos.add(dto);
-        }
-
         return issueReturnDtos;
     }
 

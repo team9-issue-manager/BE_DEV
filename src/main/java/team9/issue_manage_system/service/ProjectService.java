@@ -50,7 +50,8 @@ public class ProjectService {
         System.out.println("check account: " +  accountOpt);
 
         if (accountOpt.isPresent() && accountOpt.get().getRole().equals("admin") && projectOpt.isPresent()) {
-            projectRepository.deleteById(projectDeleteDto.getProjectNum());
+            System.out.println(projectOpt.get());
+            projectRepository.deleteById(projectOpt.get().getProjectNum());
             return true;
         }
         return false;

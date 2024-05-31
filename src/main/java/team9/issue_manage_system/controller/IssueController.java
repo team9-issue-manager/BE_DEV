@@ -22,7 +22,9 @@ public class IssueController {
         Map<String, Object> response = new HashMap<>();
         List<IssueReturnDto> issueReturnDto = issueService.searchIssueByFilter(issueSearchDto);
         response.put("success", !issueReturnDto.isEmpty());
-        response.put("issues", issueReturnDto);
+        if (!issueReturnDto.isEmpty()) {
+            response.put("issues", issueReturnDto);
+        }
         return ResponseEntity.ok(response);
     }
 
