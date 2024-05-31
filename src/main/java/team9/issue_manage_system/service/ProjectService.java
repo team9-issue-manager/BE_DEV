@@ -47,15 +47,14 @@ public class ProjectService {
     public boolean projectDelete(ProjectDeleteDto projectDeleteDto) {
         Optional<Account> accountOpt = accountRepository.findById(projectDeleteDto.getAdminId());
         Optional<Project> projectOpt = projectRepository.findById(projectDeleteDto.getProjectNum());
-        //System.out.println("check account: " +  accountOpt);
 
         if (accountOpt.isPresent() && accountOpt.get().getRole().equals("admin") && projectOpt.isPresent()) {
-            System.out.println(projectOpt.get().getProjectNum());
             projectRepository.deleteById(projectOpt.get().getProjectNum());
             return true;
         }
         return false;
     }
+
 
     private ProjectReturnDto makeProjectReturnDto(Project project) {
         ProjectReturnDto projectReturnDto = new ProjectReturnDto();
@@ -65,12 +64,11 @@ public class ProjectService {
         projectReturnDto.setDate(project.getDate());
         List<IssueReturnDto> issueReturnDtos = new ArrayList<>();
         Set<Issue> issues = project.getIssues();
-        if (issues == null) {
-            issues = new HashSet<>();
-        }
-        for (Issue issue : issues) {
-            IssueReturnDto issueReturnDto = issueService.makeIssueReturnDto(issue);
-            issueReturnDtos.add(issueReturnDto);
+        if (issues != null) {
+            for (Issue issue : issues) {
+                IssueReturnDto issueReturnDto = issueService.makeIssueReturnDto(issue);
+                issueReturnDtos.add(issueReturnDto);
+            }
         }
         projectReturnDto.setIssues(issueReturnDtos);
         return projectReturnDto;

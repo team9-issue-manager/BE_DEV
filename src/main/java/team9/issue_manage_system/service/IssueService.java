@@ -100,9 +100,11 @@ public class IssueService {
         issueReturnDto.setDate(issue.getDate());
         issueReturnDto.setTag(issue.getTag());
 
-        // Null check for devId
+        // Null 체크
         if (issue.getDeveloper() != null) {
             issueReturnDto.setDevId(issue.getDeveloper().getId());
+        } else {
+            issueReturnDto.setDevId(""); // 기본 값으로 빈 문자열 설정
         }
 
         return issueReturnDto;
