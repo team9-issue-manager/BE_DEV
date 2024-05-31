@@ -47,10 +47,10 @@ public class ProjectService {
     public boolean projectDelete(ProjectDeleteDto projectDeleteDto) {
         Optional<Account> accountOpt = accountRepository.findById(projectDeleteDto.getAdminId());
         Optional<Project> projectOpt = projectRepository.findById(projectDeleteDto.getProjectNum());
-        System.out.println("check account: " +  accountOpt);
+        //System.out.println("check account: " +  accountOpt);
 
         if (accountOpt.isPresent() && accountOpt.get().getRole().equals("admin") && projectOpt.isPresent()) {
-            System.out.println(projectOpt.get());
+            System.out.println(projectOpt.get().getProjectNum());
             projectRepository.deleteById(projectOpt.get().getProjectNum());
             return true;
         }

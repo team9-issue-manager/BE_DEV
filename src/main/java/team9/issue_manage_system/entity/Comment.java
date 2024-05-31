@@ -27,6 +27,7 @@ public class Comment {
     private String content;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     @JoinColumn(name = "issueNum", referencedColumnName = "issueNum")
     private Issue issue;
 
