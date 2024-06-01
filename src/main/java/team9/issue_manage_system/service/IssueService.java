@@ -85,8 +85,8 @@ public class IssueService {
         return false;
     }
 
-    public Optional<IssueReturnDto> uploadIssue(IssueCreateDto issueCreateDto) {
-        System.out.println(issueCreateDto);
+    public boolean uploadIssue(IssueCreateDto issueCreateDto) {
+        //System.out.println(issueCreateDto);
         Optional<Account> accountOpt = accountRepository.findById(issueCreateDto.getAccountId());
         Optional<Project> projectOpt = projectRepository.findById(issueCreateDto.getProjectNum());
 
@@ -101,10 +101,9 @@ public class IssueService {
             issue.setState(0); // 기본값을 0으로 설정
             issueRepository.save(issue);
 
-            IssueReturnDto issueReturnDto = makeIssueReturnDto(issue);
-            return Optional.of(issueReturnDto);
+            return true;
         } else {
-            return Optional.empty();
+            return false;
         }
     }
 
