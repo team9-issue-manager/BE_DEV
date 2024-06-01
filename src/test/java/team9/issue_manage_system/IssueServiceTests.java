@@ -8,9 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-import team9.issue_manage_system.dto.IssueAssignDevDto;
-import team9.issue_manage_system.dto.IssueCreateDto;
-import team9.issue_manage_system.dto.IssueReturnDto;
+import team9.issue_manage_system.dto.*;
 import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.entity.Issue;
 import team9.issue_manage_system.entity.Project;
@@ -41,12 +39,19 @@ public class IssueServiceTests {
     private IssueService issueService;
 
     private IssueCreateDto issueCreateDto;
+    private IssueReturnDto issueReturnDto;
     private Issue issue;
     private Account account;
     private Project project;
 
     @BeforeEach
     void setUp() {
+        account = new Account();
+        account.setId("new dev");
+
+        project = new Project();
+        project.setProjectNum(1L);
+
         issueCreateDto = new IssueCreateDto();
         issueCreateDto.setTitle("Test Issue");
         issueCreateDto.setContent("Test Content");
@@ -62,13 +67,8 @@ public class IssueServiceTests {
         issue.setProject(project);
         issue.setTag("bug");
         issue.setState(0);
-
-        account = new Account();
-        account.setId("new dev");
-
-        project = new Project();
-        project.setProjectNum(1L);
     }
+
 
     @Test
     void uploadIssueSuccess() {
@@ -157,4 +157,120 @@ public class IssueServiceTests {
 
         verify(issueRepository, never()).save(any(Issue.class));
     }
+
+//    searchIssueByFilter에 대한 테스트를 작성
+    @Test
+    void searchIssueByTitle() {
+        // Given
+        IssueSearchDto issueSearchDto = new IssueSearchDto();
+        issueSearchDto.setFilter("title");
+        issueSearchDto.setValue("Test Issue");
+
+        when(issueRepository.findAllByTitleContaining("Test Issue")).thenReturn(Collections.singletonList(issue));
+
+        // When
+        List<IssueReturnDto> results = issueService.searchIssueByFilter(issueSearchDto);
+
+        // Then
+        assertNotNull(results);
+        assertEquals(1, results.size());
+        assertEquals("Test Issue", results.get(0).getTitle());
+
+        verify(issueRepository, times(1)).findAllByTitleContaining("Test Issue");
+    }
+
+    @Test
+    void searchIssueByTag() {
+        // Given
+        IssueSearchDto issueSearchDto = new IssueSearchDto();
+        issueSearchDto.setFilter("tag");
+        issueSearchDto.setValue("bug");
+
+        when(issueRepository.findAllByTagContaining("bug")).thenReturn(Collections.singletonList(issue));
+
+        // When
+        List<IssueReturnDto> results = issueService.searchIssueByFilter(issueSearchDto);
+
+        // Then
+        assertNotNull(results);
+        assertEquals(1, results.size());
+        assertEquals("bug", results.get(0).getTag());
+
+        verify(issueRepository, times(1)).findAllByTagContaining("bug");
+    }
+
+    @Test
+    void searchIssueByWriter() {
+        // Given
+        IssueSearchDto issueSearchDto = new IssueSearchDto();
+        issueSearchDto.setFilter("writer");
+        issueSearchDto.setValue("new dev");
+
+        when(issueRepository.findALLByAccount_Id("new dev")).thenReturn(Collections.singletonList(issue));
+
+        // When
+        List<IssueReturnDto> results = issueService.searchIssueByFilter(issueSearchDto);
+
+        // Then
+        assertNotNull(results);
+        assertEquals(1, results.size());
+        assertEquals("new dev", results.get(0).getAccountId());
+
+        verify(issueRepository, times(1)).findALLByAccount_Id("new dev");
+    }
+
+//    issueListAll에 대한 테스트를 작성
+    @Test
+    void issueListAll() {
+        // Given
+        when(issueRepository.findAll()).thenReturn(Collections.singletonList(issue));
+
+        // When
+        List<IssueReturnDto> results = issueService.issueListAll();
+
+        // Then
+        assertNotNull(results);
+        assertEquals(1, results.size());
+        assertEquals("Test Issue", results.get(0).getTitle());
+
+        verify(issueRepository, times(1)).findAll();
+    }
+
+//    assignDevAuto에 대한 테스트를 작성
+    @Test
+    void assignDevAutoSuccess() {
+        // Given
+        IssueAssignDevAutoDto dto = new IssueAssignDevAutoDto();
+        dto.setIssueNum(1L);
+
+        when(issueRepository.findById(1L)).thenReturn(Optional.of(issue));
+        Account dev1 = new Account();
+        dev1.setId("dev1");
+        dev1.setRole("dev");
+
+        Account dev2 = new Account();
+        dev2.setId("dev2");
+        dev2.setRole("dev");
+
+        List<Account> developers = Arrays.asList(dev1, dev2);
+
+        when(accountRepository.findAllByRole("dev")).thenReturn(developers);
+        when(issueRepository.countByDeveloperAndStateBetween(dev1, 1, 2)).thenReturn(2);
+        when(issueRepository.countByDeveloperAndStateBetween(dev2, 1, 2)).thenReturn(1);
+        when(issueRepository.countByDeveloperAndStateBetween(dev1, 3, 4)).thenReturn(3);
+        when(issueRepository.countByDeveloperAndStateBetween(dev2, 3, 4)).thenReturn(2);
+
+        // When
+        ResponseEntity<Map<String, Object>> responseEntity = issueService.assignDevAuto(dto);
+        Map<String, Object> response = responseEntity.getBody();
+
+        // Then
+        assertNotNull(response);
+        assertTrue((Boolean) response.get("success"));
+        assertEquals("dev2", issue.getDeveloper().getId());
+        assertEquals(1, issue.getState());
+
+        verify(issueRepository, times(1)).save(issue);
+    }
+
 }
