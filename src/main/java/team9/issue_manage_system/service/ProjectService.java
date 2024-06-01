@@ -10,7 +10,6 @@ import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.entity.Issue;
 import team9.issue_manage_system.entity.Project;
 import team9.issue_manage_system.repository.AccountRepository;
-import team9.issue_manage_system.repository.IssueRepository;
 import team9.issue_manage_system.repository.ProjectRepository;
 
 import java.util.*;
@@ -53,6 +52,18 @@ public class ProjectService {
             return true;
         }
         return false;
+    }
+
+    public List<ProjectReturnDto> projectList() {
+        List<Project> projects = projectRepository.findAll();
+        List<ProjectReturnDto> projectReturnDtos = new ArrayList<>();
+        if (!projects.isEmpty()) {
+            for (Project project : projects) {
+                ProjectReturnDto projectReturnDto = makeProjectReturnDto(project);
+                projectReturnDtos.add(projectReturnDto);
+            }
+        }
+        return projectReturnDtos;
     }
 
 

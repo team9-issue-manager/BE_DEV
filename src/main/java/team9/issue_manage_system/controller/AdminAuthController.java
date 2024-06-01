@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import team9.issue_manage_system.dto.AdminAuthDto;
 import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.entity.AdminAuth;
 import team9.issue_manage_system.service.AccountService;
@@ -24,7 +25,7 @@ public class AdminAuthController {
 
     @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> adminAuthListAll() {
-        List<AdminAuth> adminAuthServiceList = adminAuthService.adminAuthListAll();
+        List<AdminAuthDto> adminAuthServiceList = adminAuthService.adminAuthListAll();
         Map<String, Object> response = new HashMap<>();
         if (!adminAuthServiceList.isEmpty()) {
             response.put("success", true);

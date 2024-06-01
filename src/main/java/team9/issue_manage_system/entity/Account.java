@@ -1,6 +1,5 @@
 package team9.issue_manage_system.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,10 +29,6 @@ public class Account {
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Issue> issues;
-
-//    @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-//    @JsonManagedReference
-//    private Set<Issue> assignedIssues;
 
     public Account() {}
 }

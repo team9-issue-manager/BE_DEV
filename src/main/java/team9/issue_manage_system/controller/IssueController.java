@@ -1,14 +1,17 @@
 package team9.issue_manage_system.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team9.issue_manage_system.dto.*;
+import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.service.IssueService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,19 +39,61 @@ public class IssueController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/changeState")
+    public ResponseEntity<Map<String, Object>> changeState(@RequestBody IssueChangeStateDto issueChangeStateDto) {
+        System.out.println(issueChangeStateDto);
+        boolean result = issueService.changeState(issueChangeStateDto);
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("success", true);
+        }
+        else {
+            response.put("success", false);
+        }
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> uploadIssue(@RequestBody IssueCreateDto issueCreateDto) {
-        return issueService.uploadIssue(issueCreateDto);
+        Map<String, Object> response = new HashMap<>();
+        Optional<IssueReturnDto> issueReturnDtoOpt = issueService.uploadIssue(issueCreateDto);
+
+        if (issueReturnDtoOpt.isPresent()) {
+            response.put("success", true);
+            response.put("issue", issueReturnDtoOpt.get());
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("result", "이슈를 생성할 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
 
     @PostMapping("/assignDev")
     public ResponseEntity<Map<String, Object>> assignDev(@RequestBody IssueAssignDevDto issueAssignDev) {
-        return issueService.assignDev(issueAssignDev);
+        Map<String, Object> response = new HashMap<>();
+        boolean success = issueService.assignDev(issueAssignDev);
+
+        if (success) {
+            response.put("success", true);
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     @PostMapping("/assignDevAuto")
     public ResponseEntity<Map<String, Object>> assignDevAuto(@RequestBody IssueAssignDevAutoDto issueAssignDevAuto) {
-        return issueService.assignDevAuto(issueAssignDevAuto);
+        Map<String, Object> response = new HashMap<>();
+        Optional<Account> selectedDevOpt = issueService.assignDevAuto(issueAssignDevAuto);
+
+        if (selectedDevOpt.isPresent()) {
+            response.put("success", true);
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
     @GetMapping("/statistics")

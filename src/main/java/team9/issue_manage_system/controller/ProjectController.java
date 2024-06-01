@@ -3,17 +3,14 @@ package team9.issue_manage_system.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import team9.issue_manage_system.dto.ProjectCreateDto;
 import team9.issue_manage_system.dto.ProjectDeleteDto;
 import team9.issue_manage_system.dto.ProjectReturnDto;
-import team9.issue_manage_system.entity.Project;
 import team9.issue_manage_system.service.ProjectService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -38,6 +35,14 @@ public class ProjectController {
             response.put("success", false);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<Map<String, Object>> listProject() {
+        Map<String, Object> response = new HashMap<>();
+        List<ProjectReturnDto> projectReturnDtos = projectService.projectList();
+        response.put("projects", projectReturnDtos);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/delete")

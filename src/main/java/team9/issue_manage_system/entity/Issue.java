@@ -33,7 +33,6 @@ public class Issue {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "projectNum", referencedColumnName = "projectNum")
-    //@JsonBackReference
     private Project project;
 
     private Integer state = 0; // 0:new, 1:assigned, 2:fixed, 3:resolved, 4:closed
@@ -45,7 +44,6 @@ public class Issue {
     public String tag;
 
     @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    //@JsonManagedReference
     private Set<Comment> comments;
 
     public Issue() {}
