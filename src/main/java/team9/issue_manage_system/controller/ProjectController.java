@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import team9.issue_manage_system.dto.ProjectCreateDto;
 import team9.issue_manage_system.dto.ProjectDeleteDto;
 import team9.issue_manage_system.dto.ProjectReturnDto;
-import team9.issue_manage_system.entity.Project;
 import team9.issue_manage_system.service.ProjectService;
 
 import java.util.HashMap;

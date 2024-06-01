@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team9.issue_manage_system.dto.AccountReturnDto;
 import team9.issue_manage_system.entity.Account;
-import team9.issue_manage_system.entity.AdminAuth;
 import team9.issue_manage_system.service.AccountService;
 
 import java.util.*;
@@ -20,7 +19,6 @@ public class AccountController {
     private final AccountService accountService;
 
     // 그 유저가 있는지 확인하는 거니까 POST, GET 메서드 다 허용.
-    // 일단 로그인으로 짰어요
     @PostMapping("/find")
     public ResponseEntity<Map<String, Object>> findUser(@RequestBody Account account) {
         accountService.printAccount(account);
@@ -56,11 +54,6 @@ public class AccountController {
     }
 
 
-    /**
-     * ID 중복 여부 확인 : 존재하면 true, 새로운 경우 false
-     * @param account : Account타입의 클래스 (이 부분은 수정 필요 : ID체크에는 Password가 없으므로)
-     *                -> 어처피 account의 primary key가 id라 딱히 상관없을 듯?
-     */
     @PostMapping("/IdCheck")
     public ResponseEntity<Map<String, Boolean>> findUserIdCheck(@RequestBody Account account) {
         accountService.printAccount(account);

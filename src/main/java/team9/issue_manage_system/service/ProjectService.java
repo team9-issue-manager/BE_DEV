@@ -10,7 +10,6 @@ import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.entity.Issue;
 import team9.issue_manage_system.entity.Project;
 import team9.issue_manage_system.repository.AccountRepository;
-import team9.issue_manage_system.repository.IssueRepository;
 import team9.issue_manage_system.repository.ProjectRepository;
 
 import java.util.*;
