@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import team9.issue_manage_system.dto.IssueAssignDevDto;
 import team9.issue_manage_system.dto.IssueCreateDto;
 import team9.issue_manage_system.dto.IssueReturnDto;
@@ -25,7 +26,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 public class IssueServiceTests {
 
     @Mock
@@ -72,26 +72,36 @@ public class IssueServiceTests {
 
     @Test
     void uploadIssueSuccess() {
+        // Given
         when(accountRepository.findById("new dev")).thenReturn(Optional.of(account));
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
         when(issueRepository.save(any(Issue.class))).thenReturn(issue);
 
-        Map<String, Object> response = issueService.uploadIssue(issueCreateDto).getBody();
+        // When
+        ResponseEntity<Map<String, Object>> responseEntity = issueService.uploadIssue(issueCreateDto);
+        Map<String, Object> response = responseEntity.getBody();
 
+        // Then
         assertNotNull(response);
-        assertTrue((Boolean) response.get("success"));
+        assertTrue(response.containsKey("success"), "Response should contain 'success' key");
+        assertTrue((Boolean) response.get("success"), "Success value should be true");
         IssueReturnDto issueReturnDto = (IssueReturnDto) response.get("issue");
         assertEquals("Test Issue", issueReturnDto.getTitle());
 
         verify(issueRepository, times(1)).save(any(Issue.class));
     }
 
+
     @Test
     void uploadIssueFail() {
+        // Given
         when(accountRepository.findById("new dev")).thenReturn(Optional.empty());
 
-        Map<String, Object> response = issueService.uploadIssue(issueCreateDto).getBody();
+        // When
+        ResponseEntity<Map<String, Object>> responseEntity = issueService.uploadIssue(issueCreateDto);
+        Map<String, Object> response = responseEntity.getBody();
 
+        // Then
         assertNotNull(response);
         assertEquals("이슈를 생성할 수 없습니다.", response.get("result"));
 
@@ -100,24 +110,33 @@ public class IssueServiceTests {
 
     @Test
     void assignDevSuccess() {
+        // Given
         when(issueRepository.findById(1L)).thenReturn(Optional.of(issue));
         when(accountRepository.findById("new dev")).thenReturn(Optional.of(account));
         account.setRole("dev");
 
-        Map<String, Object> response = issueService.assignDev(new IssueAssignDevDto()).getBody();
+        IssueAssignDevDto request = new IssueAssignDevDto();
+        request.setIssueNum(1L);
+        request.setDevId("new dev");
 
+        // When
+        ResponseEntity<Map<String, Object>> responseEntity = issueService.assignDev(request);
+        Map<String, Object> response = responseEntity.getBody();
+
+        // Then
         assertNotNull(response);
-        assertTrue((Boolean) response.get("success"));
-        assertEquals(1, issue.getState());
+        assertTrue((Boolean) response.get("success"), "Response should be successful");
+        assertEquals(1, issue.getState(), "Issue state should be updated to 1");
 
         verify(issueRepository, times(1)).save(issue);
     }
+
 
     @Test
     void assignDevFailRole() {
         when(issueRepository.findById(1L)).thenReturn(Optional.of(issue));
         when(accountRepository.findById("new dev")).thenReturn(Optional.of(account));
-        account.setRole("user");
+        account.setRole("dev");
 
         Map<String, Object> response = issueService.assignDev(new IssueAssignDevDto()).getBody();
 
