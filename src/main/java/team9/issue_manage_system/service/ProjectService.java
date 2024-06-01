@@ -55,6 +55,18 @@ public class ProjectService {
         return false;
     }
 
+    public List<ProjectReturnDto> projectList() {
+        List<Project> projects = projectRepository.findAll();
+        List<ProjectReturnDto> projectReturnDtos = new ArrayList<>();
+        if (!projects.isEmpty()) {
+            for (Project project : projects) {
+                ProjectReturnDto projectReturnDto = makeProjectReturnDto(project);
+                projectReturnDtos.add(projectReturnDto);
+            }
+        }
+        return projectReturnDtos;
+    }
+
 
     private ProjectReturnDto makeProjectReturnDto(Project project) {
         ProjectReturnDto projectReturnDto = new ProjectReturnDto();

@@ -60,6 +60,34 @@ public class IssueService {
         return issueReturnDtos;
     }
 
+    public boolean changeState(IssueChangeStateDto issueChangeStateDto) {
+        Optional<Issue> issueOpt = issueRepository.findById(issueChangeStateDto.getIssueNum());
+        if (issueOpt.isPresent()) {
+            Issue issue = issueOpt.get();
+            if (issue.getState() == 1 && issueChangeStateDto.getAccountId().equals(issue.getDeveloper().getId())) { //issue의 devId와 입력된 accountId가 일치하면, fixed 로 변경
+                issue.setState(2);
+                issueRepository.save(issue);
+                return true;
+            }
+            else if (issue.getState() == 2 && issueChangeStateDto.getAccountId().equals(issue.getAccount().getId())) {
+                issue.setState(3);
+                issueRepository.save(issue);
+                return true;
+
+            }
+            else if (issue.getState() == 3 && issueChangeStateDto.getAccountId().equals(issue.getProject().getProjectLeader().getId())) {
+                issue.setState(4);
+                issueRepository.save(issue);
+                return true;
+
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
+    }
+
     public ResponseEntity<Map<String, Object>> uploadIssue(IssueCreateDto issueCreateDto) {
         System.out.println(issueCreateDto);
         Optional<Account> accountOpt = accountRepository.findById(issueCreateDto.getAccountId());

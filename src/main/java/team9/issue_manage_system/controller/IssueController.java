@@ -36,6 +36,20 @@ public class IssueController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/changeState")
+    public ResponseEntity<Map<String, Object>> changeState(@RequestBody IssueChangeStateDto issueChangeStateDto) {
+        System.out.println(issueChangeStateDto);
+        boolean result = issueService.changeState(issueChangeStateDto);
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("success", true);
+        }
+        else {
+            response.put("success", false);
+        }
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> uploadIssue(@RequestBody IssueCreateDto issueCreateDto) {
         return issueService.uploadIssue(issueCreateDto);
