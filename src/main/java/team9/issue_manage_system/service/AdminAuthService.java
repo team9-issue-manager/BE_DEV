@@ -28,7 +28,7 @@ public class AdminAuthService {
                 AccountReturnDto accountReturnDto = new AccountReturnDto();
                 AdminAuthDto adminAuthDto = new AdminAuthDto();
                 accountReturnDto.setId(account.getId());
-                accountReturnDto.setRole(account.getRole());
+                accountReturnDto.setRole(adminAuth.getRole());
                 adminAuthDto.setRequestAccount(accountReturnDto);
                 adminAuthDto.setRequestNum(adminAuth.getRequestNum());
                 adminAuthDtos.add(adminAuthDto);
