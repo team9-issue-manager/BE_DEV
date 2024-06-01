@@ -1,7 +1,6 @@
 package team9.issue_manage_system.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 //Admin이 받아서 처리할 권한 수정 알림 엔티티
@@ -9,15 +8,15 @@ import lombok.Data;
 @Data
 public class AdminAuth {
 
-    public AdminAuth(String id, String role){
-        this.id = id;
-        this.role = role;
-    };
-
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long requestNum;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "accountId", referencedColumnName = "id")
+    private Account requestAccount;
 
     private String role;
 
-    public AdminAuth() {};
+    public AdminAuth() {}
 }

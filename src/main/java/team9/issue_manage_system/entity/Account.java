@@ -1,10 +1,9 @@
 package team9.issue_manage_system.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +13,7 @@ import java.util.Set;
 @Data
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = {"issues"})
 public class Account {
 
     public Account(String id, String password, String role){
@@ -22,21 +22,18 @@ public class Account {
         this.role = role; //
     }
 
-    public Account(String id, String password) {
-        this.id = id;
-        this.password = password;
-        this.role = "tester";
-        //if (mode > 0) mode += 1; // 나중에 수정
-    }
-
     @Id
     private String id;
 
     private String password;
     private String role;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Issue> issues;
+
+//    @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+//    @JsonManagedReference
+//    private Set<Issue> assignedIssues;
 
     public Account() {}
 }

@@ -1,23 +1,19 @@
 package team9.issue_manage_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Data
-@Getter
-@Setter
-// @Data 존재하니까 @Getter, @Setter 생략.
+@Data// @Data 존재하니까 @Getter, @Setter 생략.
+@EqualsAndHashCode(exclude = {"comments", "account", "project"})
 public class Issue {
-    public enum Tag{
-        PL, DEV, TESTER
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,34 +30,23 @@ public class Issue {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "devId", referencedColumnName = "id")
     private Account developer;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "projectNum", referencedColumnName = "projectNum")
+    //@JsonBackReference
+    private Project project;
+
     private Integer state = 0; // 0:new, 1:assigned, 2:fixed, 3:resolved, 4:closed
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @ElementCollection(targetClass = Tag.class)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "issue_tags")
-    @Column(name = "tag")
-    public Set<Tag> tags;
+    public String tag;
 
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    //@JsonManagedReference
+    private Set<Comment> comments;
 
     public Issue() {}
-
-    public Issue(String title, String content){
-        this.title = title;
-        this.content = content;
-    }
-
-    public Issue(String title, String content, String id, Set<Tag> tags){
-        this.title = title;
-        this.content = content;
-        this.tags = tags;
-    }
-
-    @Data
-    public static class IssueSearchRequest {
-        private String title;
-    }
 }
