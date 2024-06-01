@@ -1,15 +1,16 @@
 package team9.issue_manage_system.dto;
 
-import lombok.Data;
-import team9.issue_manage_system.entity.Comment;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
-@Data
-public class CommentDto {
+@Setter
+@Getter
+public class CommentReturnDto {
     private Long issueNum;
-    private String title;
+    private Long commentNum;
     private String content;
-    private Date date;
     private String accountId;
+    private Date date;
 }

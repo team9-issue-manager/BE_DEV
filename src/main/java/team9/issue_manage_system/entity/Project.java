@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Data
+@EqualsAndHashCode(exclude = {"issues"})
 public class Project {
 
     @Id
@@ -25,6 +27,7 @@ public class Project {
     // private String accountId; // plId -> 위의 왜래키 관계를 통해 issue ta  ble에 accountId 자동으로 생성
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    //@JsonManagedReference
     private Set<Issue> issues;
 
 

@@ -1,6 +1,7 @@
 package team9.issue_manage_system.service;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,13 +37,14 @@ public class IssueService {
             issueList = issueRepository.findAllByTagContaining(issueSearchDto.getValue());
         }
         else if (filterValue.equals("writer")) {
-            issueList = issueRepository.findAllByAccountIdContaining(issueSearchDto.getValue());
+            issueList = issueRepository.findALLByAccount_Id(issueSearchDto.getValue());
         }
-        System.out.println(issueList);
-
-        for (Issue issue : issueList){
-            IssueReturnDto dto = makeIssueReturnDto(issue);
-            issueReturnDtos.add(dto);
+        if (!issueList.isEmpty())
+        {
+            for (Issue issue : issueList){
+                IssueReturnDto dto = makeIssueReturnDto(issue);
+                issueReturnDtos.add(dto);
+            }
         }
         return issueReturnDtos;
     }
@@ -58,20 +60,20 @@ public class IssueService {
         return issueReturnDtos;
     }
 
-    public ResponseEntity<Map<String, Object>> uploadIssue(IssueDto issueDto) {
-        System.out.println(issueDto);
-        Optional<Account> accountOpt = accountRepository.findById(issueDto.getAccountId());
-        Optional<Project> projectOpt = projectRepository.findById(issueDto.getProjectNum());
+    public ResponseEntity<Map<String, Object>> uploadIssue(IssueCreateDto issueCreateDto) {
+        System.out.println(issueCreateDto);
+        Optional<Account> accountOpt = accountRepository.findById(issueCreateDto.getAccountId());
+        Optional<Project> projectOpt = projectRepository.findById(issueCreateDto.getProjectNum());
         Map<String, Object> response = new HashMap<>();
 
         if (accountOpt.isPresent() && projectOpt.isPresent()) {
             Account account = accountOpt.get();
             Issue issue = new Issue();
-            issue.setTitle(issueDto.getTitle());
-            issue.setContent(issueDto.getContent());
+            issue.setTitle(issueCreateDto.getTitle());
+            issue.setContent(issueCreateDto.getContent());
             issue.setAccount(account);
             issue.setProject(projectOpt.get());
-            issue.setTag(issueDto.getTag());
+            issue.setTag(issueCreateDto.getTag());
             issue.setState(0); // 기본값을 0으로 설정
             issueRepository.save(issue);
 
@@ -98,9 +100,11 @@ public class IssueService {
         issueReturnDto.setDate(issue.getDate());
         issueReturnDto.setTag(issue.getTag());
 
-        // Null check for devId
+        // Null 체크
         if (issue.getDeveloper() != null) {
             issueReturnDto.setDevId(issue.getDeveloper().getId());
+        } else {
+            issueReturnDto.setDevId(""); // 기본 값으로 빈 문자열 설정
         }
 
         return issueReturnDto;

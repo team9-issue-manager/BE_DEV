@@ -16,7 +16,7 @@ import java.io.File;
 @RequestMapping("/logs")
 public class LogController {
 
-    private static final String LOG_FILE_PATH = "C/Users/rogan/logdir";
+    private static final String LOG_FILE_PATH = "/logs/";
     private static final String LOG_FILE_NAME = "logfile.log";
 
     @GetMapping("/download")
