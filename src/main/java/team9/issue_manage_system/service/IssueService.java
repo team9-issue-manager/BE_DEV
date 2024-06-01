@@ -88,11 +88,10 @@ public class IssueService {
         return false;
     }
 
-    public ResponseEntity<Map<String, Object>> uploadIssue(IssueCreateDto issueCreateDto) {
+    public Optional<IssueReturnDto> uploadIssue(IssueCreateDto issueCreateDto) {
         System.out.println(issueCreateDto);
         Optional<Account> accountOpt = accountRepository.findById(issueCreateDto.getAccountId());
         Optional<Project> projectOpt = projectRepository.findById(issueCreateDto.getProjectNum());
-        Map<String, Object> response = new HashMap<>();
 
         if (accountOpt.isPresent() && projectOpt.isPresent()) {
             Account account = accountOpt.get();
@@ -106,13 +105,9 @@ public class IssueService {
             issueRepository.save(issue);
 
             IssueReturnDto issueReturnDto = makeIssueReturnDto(issue);
-
-            response.put("success", true);
-            response.put("issue", issueReturnDto);
-            return ResponseEntity.ok(response);
+            return Optional.of(issueReturnDto);
         } else {
-            response.put("result", "이슈를 생성할 수 없습니다."); // 실패 시.
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return Optional.empty();
         }
     }
 
@@ -139,40 +134,33 @@ public class IssueService {
     }
 
 
-    public ResponseEntity<Map<String, Object>> assignDev(IssueAssignDevDto request) {
+    public boolean assignDev(IssueAssignDevDto request) {
         Optional<Issue> issueOpt = issueRepository.findById(request.getIssueNum());
         Optional<Account> devOpt = accountRepository.findById(request.getDevId());
-        Map<String, Object> response = new HashMap<>();
 
         if (issueOpt.isPresent() && devOpt.isPresent()) {
             Issue issue = issueOpt.get();
             Account developer = devOpt.get();
 
-            if (!"dev".equals(developer.getRole())) {
-                response.put("success", false);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            if ("dev".equals(developer.getRole()) && issue.getProject().getProjectLeader().getId().equals(request.getAccountId())) {
+                issue.setDeveloper(developer);
+                issue.setState(1); // state: assigned
+                issueRepository.save(issue);
+                return true;
             }
+            return false;
 
-            issue.setDeveloper(developer);
-            issue.setState(1); // state: assigned
-            issueRepository.save(issue);
-
-            response.put("success", true);
-            return ResponseEntity.ok(response);
         } else {
-            response.put("success", false);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return false;
         }
     }
 
-    public ResponseEntity<Map<String, Object>> assignDevAuto(IssueAssignDevAutoDto issueAssignDevAuto) {
+    public Optional<Account> assignDevAuto(IssueAssignDevAutoDto issueAssignDevAuto) {
         Long issueNum = issueAssignDevAuto.getIssueNum();
-        Map<String, Object> response = new HashMap<>();
-
         Optional<Issue> issueOpt = issueRepository.findById(issueNum);
+
         if (issueOpt.isEmpty()) {
-            response.put("success", false);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return Optional.empty();
         }
 
         Issue issue = issueOpt.get();
@@ -194,17 +182,14 @@ public class IssueService {
             }
         }
 
-        if (selectedDev == null) {
-            response.put("success", false);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        if (selectedDev != null && issue.getProject().getProjectLeader().getId().equals(issueAssignDevAuto.getAccountId())) {
+            issue.setDeveloper(selectedDev);
+            issue.setState(1); // state: assigned
+            issueRepository.save(issue);
+
+            return Optional.of(selectedDev);
         }
-
-        issue.setDeveloper(selectedDev);
-        issue.setState(1); // state: assigned
-        issueRepository.save(issue);
-
-        response.put("success", true);
-        return ResponseEntity.ok(response);
+        return Optional.empty();
     }
 
     public IssueStatisticsDto getIssueStatistics() {

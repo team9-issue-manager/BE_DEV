@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class IssueAssignDevAutoDto {
     private Long issueNum;
+    private String accountId;
 }
