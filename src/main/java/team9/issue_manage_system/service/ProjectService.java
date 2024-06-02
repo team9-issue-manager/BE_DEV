@@ -81,6 +81,7 @@ public class ProjectService {
                 issueReturnDtos.add(issueReturnDto);
             }
         }
+        issueReturnDtos = issueService.sortIssueReturnDto(issueReturnDtos);
         projectReturnDto.setIssues(issueReturnDtos);
         return projectReturnDto;
     }

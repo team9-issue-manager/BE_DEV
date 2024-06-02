@@ -35,6 +35,8 @@ public class Issue {
     @JoinColumn(name = "projectNum", referencedColumnName = "projectNum")
     private Project project;
 
+    private Integer priority = 3; // blocker:1, critical:2, major:3, minor:4, trivial:5 // 기본은 3
+
     private Integer state = 0; // 0:new, 1:assigned, 2:fixed, 3:resolved, 4:closed
 
     @CreationTimestamp
