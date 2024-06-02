@@ -21,6 +21,9 @@ public class IssueStatisticsDto {
         this.issuesByMonth = issuesByMonth;
     }
 
+    public IssueStatisticsDto(Long totalIssues, Map<String, Long> issuesByStatus, Map<String, Long> issuesByDeveloper) {
+    }
+
     // Getters and Setters
     public Long getTotalIssues() {
         return totalIssues;
