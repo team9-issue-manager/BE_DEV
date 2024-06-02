@@ -102,6 +102,7 @@ public class IssueService {
                 issueRepository.save(issue);
                 logger.info("Issue state changed to assigned: {}", issue);
                 return true;
+
             }
             else {
                 logger.warn("Issue state change failed due to invalid state or account ID: {}", issueChangeStateDto);
@@ -125,6 +126,7 @@ public class IssueService {
             issue.setAccount(account);
             issue.setProject(projectOpt.get());
             issue.setTag(issueCreateDto.getTag());
+            issue.setPriority(issueCreateDto.getPriority());
             issue.setState(0); // 기본값을 0으로 설정
             issueRepository.save(issue);
             logger.info("Issue created successfully: {}", issue);
@@ -142,6 +144,7 @@ public class IssueService {
         issueReturnDto.setContent(issue.getContent());
         issueReturnDto.setAccountId(issue.getAccount().getId());
         issueReturnDto.setProjectNum(issue.getProject().getProjectNum());
+        issueReturnDto.setPriority(issue.getPriority());
         issueReturnDto.setState(issue.getState());
         issueReturnDto.setDate(issue.getDate());
         issueReturnDto.setTag(issue.getTag());
