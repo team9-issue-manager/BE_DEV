@@ -83,7 +83,7 @@ class CommentServiceTests {
     void testGetCommentById() {
         when(commentRepository.findById(1L)).thenReturn(Optional.of(comment));
 
-        Optional<CommentReturnDto> result = commentService.getCommentById(1L);
+        Optional<CommentReturnDto> result = commentService.getCommentById(1L, 1L);
 
         assertTrue(result.isPresent());
         assertEquals("Test Comment", result.get().getContent());
