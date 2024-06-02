@@ -10,6 +10,7 @@ import java.util.Date;
 @Data
 public class IssueReturnDto {
     private Long issueNum;
+    private Integer priority;
     private String title;
     private String content;
     private Date date;
@@ -20,7 +21,6 @@ public class IssueReturnDto {
     private String devId;
 
     private Long projectNum;
-    private Integer priority;
     private String tag;
 
 }
