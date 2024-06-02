@@ -56,14 +56,13 @@ public class IssueController {
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> uploadIssue(@RequestBody IssueCreateDto issueCreateDto) {
         Map<String, Object> response = new HashMap<>();
-        Optional<IssueReturnDto> issueReturnDtoOpt = issueService.uploadIssue(issueCreateDto);
+        boolean issueCreateCheck = issueService.uploadIssue(issueCreateDto);
 
-        if (issueReturnDtoOpt.isPresent()) {
+        if (issueCreateCheck) {
             response.put("success", true);
-            response.put("issue", issueReturnDtoOpt.get());
             return ResponseEntity.ok(response);
         } else {
-            response.put("result", "이슈를 생성할 수 없습니다.");
+            response.put("success", false);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }

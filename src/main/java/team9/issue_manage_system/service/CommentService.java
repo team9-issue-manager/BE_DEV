@@ -33,9 +33,9 @@ public class CommentService {
         return commentReturnDtos;
     }
 
-    public Optional<CommentReturnDto> getCommentById(Long commentId) {
+    public Optional<CommentReturnDto> getCommentById(Long issueNum, Long commentId) {
          Optional<Comment> commentOpt = commentRepository.findById(commentId);
-         if (commentOpt.isPresent()) {
+         if (commentOpt.isPresent() && commentOpt.get().getIssue().getIssueNum().equals(issueNum)) {
              Comment comment = commentOpt.get();
              CommentReturnDto commentReturnDto = makeCommentReturnDto(comment);
              return Optional.of(commentReturnDto);

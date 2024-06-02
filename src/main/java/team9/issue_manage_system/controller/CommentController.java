@@ -37,7 +37,7 @@ public class CommentController {
     // 특정 이슈의 특정 댓글 하나 가져오기
     @GetMapping("/{issueNum}/comments/{commentId}")
     public ResponseEntity<Map<String, Object>> getCommentById(@PathVariable Long issueNum, @PathVariable Long commentId) {
-        Optional<CommentReturnDto> commentReturnDto = commentService.getCommentById(commentId);
+        Optional<CommentReturnDto> commentReturnDto = commentService.getCommentById(issueNum, commentId);
         Map<String, Object> response = new HashMap<>();
 
         if (commentReturnDto.isPresent()) {

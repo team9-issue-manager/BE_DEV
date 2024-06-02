@@ -36,6 +36,15 @@ public class IssueService {
         else if (filterValue.equals("writer")) {
             issueList = issueRepository.findALLByAccount_Id(issueSearchDto.getValue());
         }
+        else if (filterValue.equals("devId")) {
+            issueList = issueRepository.findAllByDeveloper_Id(issueSearchDto.getValue());
+        }
+        else if (filterValue.equals("state")) {
+            issueList = issueRepository.findAllByState(Integer.valueOf(issueSearchDto.getValue()));
+        }
+        else if (filterValue.equals("priority")) {
+            issueList = issueRepository.findAllByPriority(Integer.valueOf(issueSearchDto.getValue()));
+        }
         if (!issueList.isEmpty())
         {
             for (Issue issue : issueList){
@@ -43,7 +52,7 @@ public class IssueService {
                 issueReturnDtos.add(dto);
             }
         }
-        return issueReturnDtos;
+        return sortIssueReturnDto(issueReturnDtos);
     }
 
     public List<IssueReturnDto> issueListAll() {
@@ -53,8 +62,7 @@ public class IssueService {
             IssueReturnDto dto = makeIssueReturnDto(issue);
             issueReturnDtos.add(dto);
         }
-
-        return issueReturnDtos;
+        return sortIssueReturnDto(issueReturnDtos);
     }
 
     public boolean changeState(IssueChangeStateDto issueChangeStateDto) {
@@ -70,13 +78,16 @@ public class IssueService {
                 issue.setState(3);
                 issueRepository.save(issue);
                 return true;
-
             }
             else if (issue.getState() == 3 && issueChangeStateDto.getAccountId().equals(issue.getProject().getProjectLeader().getId())) {
                 issue.setState(4);
                 issueRepository.save(issue);
                 return true;
-
+            }
+            else if (issue.getState() == 4 && issueChangeStateDto.getAccountId().equals(issue.getProject().getProjectLeader().getId())) {
+                issue.setState(1);
+                issueRepository.save(issue);
+                return true;
             }
             else {
                 return false;
@@ -85,8 +96,8 @@ public class IssueService {
         return false;
     }
 
-    public Optional<IssueReturnDto> uploadIssue(IssueCreateDto issueCreateDto) {
-        System.out.println(issueCreateDto);
+    public boolean uploadIssue(IssueCreateDto issueCreateDto) {
+        //System.out.println(issueCreateDto);
         Optional<Account> accountOpt = accountRepository.findById(issueCreateDto.getAccountId());
         Optional<Project> projectOpt = projectRepository.findById(issueCreateDto.getProjectNum());
 
@@ -98,13 +109,13 @@ public class IssueService {
             issue.setAccount(account);
             issue.setProject(projectOpt.get());
             issue.setTag(issueCreateDto.getTag());
+            issue.setPriority(issueCreateDto.getPriority());
             issue.setState(0); // 기본값을 0으로 설정
             issueRepository.save(issue);
 
-            IssueReturnDto issueReturnDto = makeIssueReturnDto(issue);
-            return Optional.of(issueReturnDto);
+            return true;
         } else {
-            return Optional.empty();
+            return false;
         }
     }
 
@@ -116,6 +127,7 @@ public class IssueService {
         issueReturnDto.setContent(issue.getContent());
         issueReturnDto.setAccountId(issue.getAccount().getId());
         issueReturnDto.setProjectNum(issue.getProject().getProjectNum());
+        issueReturnDto.setPriority(issue.getPriority());
         issueReturnDto.setState(issue.getState());
         issueReturnDto.setDate(issue.getDate());
         issueReturnDto.setTag(issue.getTag());
@@ -130,6 +142,11 @@ public class IssueService {
         return issueReturnDto;
     }
 
+    public List<IssueReturnDto> sortIssueReturnDto(List<IssueReturnDto> issueReturnDtos) {
+        return issueReturnDtos.stream()
+                .sorted(Comparator.comparingInt(IssueReturnDto::getPriority))
+                .collect(Collectors.toList());
+    }
 
     public boolean assignDev(IssueAssignDevDto request) {
         Optional<Issue> issueOpt = issueRepository.findById(request.getIssueNum());
