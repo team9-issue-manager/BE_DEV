@@ -16,13 +16,24 @@ import java.io.File;
 @RequestMapping("/logs")
 public class LogController {
 
-    private static final String LOG_FILE_PATH = "/logs/";
+    private static final String LOG_FILE_PATH = "./logs/";
     private static final String LOG_FILE_NAME = "logfile.log";
 
     @GetMapping("/download")
     public ResponseEntity<Resource> downloadLogFile() {
-        File logFile = new File(LOG_FILE_PATH, LOG_FILE_NAME);
+        File logDirectory = new File(LOG_FILE_PATH);
+        if (!logDirectory.exists()) {
+            if (!logDirectory.mkdirs()) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
+        }
+
+        File logFile = new File(logDirectory, LOG_FILE_NAME);
         if (!logFile.exists()) {
+            // If the log file doesn't exist, you may want to create it here.
+            // You can create an empty file using logFile.createNewFile()
+            // or generate log entries and write them to the file.
+            // For simplicity, I'll return a 404 status here.
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 

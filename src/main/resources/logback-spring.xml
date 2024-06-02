@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n"/>
@@ -23,8 +22,15 @@
     </appender>
 
     <!-- Logger Configuration -->
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="com.yourpackage" level="DEBUG"/>
+    <logger name="org.springframework" level="INFO" additivity="false"/>
+    <!-- Add logger for your package -->
+    <logger name="team9.issue_manage_system" level="INFO" additivity="false"/>
+
+    <!-- Logger for "test-logger" -->
+    <logger name="test-logger" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
 
     <!-- Root Logger -->
     <root level="INFO">

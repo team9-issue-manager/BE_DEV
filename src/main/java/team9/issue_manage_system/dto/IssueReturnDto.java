@@ -21,6 +21,7 @@ public class IssueReturnDto {
     private String devId;
 
     private Long projectNum;
+    private Integer priority;
     private String tag;
 
 }
