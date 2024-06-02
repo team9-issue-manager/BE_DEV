@@ -9,5 +9,6 @@ public class IssueCreateDto {
     private String content;
     private String accountId;
     private Long projectNum;
+    private Integer priority;
     private String tag;
 }
