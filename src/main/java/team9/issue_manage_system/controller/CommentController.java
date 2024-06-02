@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team9.issue_manage_system.dto.CommentCreateDto;
 import team9.issue_manage_system.dto.CommentReturnDto;
-import team9.issue_manage_system.entity.Comment;
 import team9.issue_manage_system.service.CommentService;
 
 import java.util.HashMap;

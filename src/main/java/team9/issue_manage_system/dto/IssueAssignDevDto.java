@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class IssueAssignDevDto {
     private Long issueNum;
+    private String accountId;
     private String devId;
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import team9.issue_manage_system.dto.CommentCreateDto;
 import team9.issue_manage_system.dto.CommentReturnDto;
-import team9.issue_manage_system.dto.IssueReturnDto;
 import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.entity.Comment;
 import team9.issue_manage_system.entity.Issue;
