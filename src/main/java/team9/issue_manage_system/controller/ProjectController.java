@@ -25,7 +25,6 @@ public class ProjectController {
     @PostMapping("/create")
     public ResponseEntity<Map<String, Object>> uploadProject(@RequestBody ProjectCreateDto projectCreateDto) {
         Map<String, Object> response = new HashMap<>();
-        System.out.println(projectCreateDto);
         Optional<ProjectReturnDto> projectReturnDto = projectService.projectCreate(projectCreateDto);
         if (projectReturnDto.isPresent()) {
             response.put("success", true);

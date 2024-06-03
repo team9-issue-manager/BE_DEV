@@ -22,10 +22,6 @@ public class ProjectService {
     private final AccountRepository accountRepository;
     private final IssueService issueService;
 
-    public void printProject(Project project) {
-        System.out.println(project);
-    }
-
     public Optional<ProjectReturnDto> projectCreate(ProjectCreateDto projectCreateDto) {
         Optional<Account> accountOpt = accountRepository.findById(projectCreateDto.getPlId());
 

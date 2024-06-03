@@ -21,7 +21,6 @@ public class AccountController {
     // 그 유저가 있는지 확인하는 거니까 POST, GET 메서드 다 허용.
     @PostMapping("/find")
     public ResponseEntity<Map<String, Object>> findUser(@RequestBody Account account) {
-        accountService.printAccount(account);
         Optional<Account> newAccount = accountService.findUser(account);
         Map<String, Object> response = new HashMap<>();
 
@@ -56,7 +55,6 @@ public class AccountController {
 
     @PostMapping("/IdCheck")
     public ResponseEntity<Map<String, Boolean>> findUserIdCheck(@RequestBody Account account) {
-        accountService.printAccount(account);
         boolean exists = accountService.findUserIdCheck(account);
         Map<String, Boolean> response = new HashMap<>();
         response.put("exist", exists);
@@ -66,7 +64,6 @@ public class AccountController {
     // 회원가입
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> addAccount(@RequestBody Account account){
-        accountService.printAccount(account);
         boolean success = accountService.uploadAccount(account);
         Map<String, Object> response = new HashMap<>();
         if (success) {

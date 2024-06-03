@@ -17,14 +17,6 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final AdminAuthRepository adminAuthRepository;
 
-    public void printAccount(Account account) {
-        System.out.println("USER INPUT DETECTED");
-        System.out.println("INPUT ACCOUNT ID : " + account.getId());
-        System.out.println("INPUT ACCOUNT PW : " + account.getPassword());
-        System.out.println("INPUT ACCOUNT ROLE : " + account.getRole());
-    }
-
-
     public Optional<Account> findUser(Account account) {
         Optional<Account> foundAccount = accountRepository.findById(account.getId());
         if (foundAccount.isPresent()) {
@@ -38,7 +30,6 @@ public class AccountService {
 
 
     public List<AccountReturnDto> findUserByAccount(String role) {
-        System.out.println(role);
 
         List<AccountReturnDto> accountReturnDtos = new ArrayList<>();
         List<Account> accounts= accountRepository.findAllByRole(role);
@@ -57,7 +48,6 @@ public class AccountService {
 
     @Transactional
     public boolean uploadAccount(Account account) {
-        System.out.println(account);
         Optional<Account> foundAccount = accountRepository.findById(account.getId());
         if (foundAccount.isEmpty()) {
             Account newAccount = new Account(account.getId(), account.getPassword(), "tester"); // 생성할 떼는 일단 tester로 생성.
@@ -68,7 +58,6 @@ public class AccountService {
             AdminAuth adminAuth = new AdminAuth();
             adminAuth.setRequestAccount(newAccount);
             adminAuth.setRole(account.getRole());
-            System.out.println(adminAuth);
             adminAuthRepository.save(adminAuth);
             return true;
         }

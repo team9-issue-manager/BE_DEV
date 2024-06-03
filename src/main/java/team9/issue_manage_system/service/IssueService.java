@@ -143,6 +143,7 @@ public class IssueService {
         issueReturnDto.setAccountId(issue.getAccount().getId());
         issueReturnDto.setProjectNum(issue.getProject().getProjectNum());
         issueReturnDto.setState(issue.getState());
+        issueReturnDto.setPriority(issue.getPriority());
         issueReturnDto.setDate(issue.getDate());
         issueReturnDto.setTag(issue.getTag());
 

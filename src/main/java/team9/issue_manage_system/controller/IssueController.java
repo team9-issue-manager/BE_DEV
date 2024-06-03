@@ -41,7 +41,6 @@ public class IssueController {
 
     @PostMapping("/changeState")
     public ResponseEntity<Map<String, Object>> changeState(@RequestBody IssueChangeStateDto issueChangeStateDto) {
-        System.out.println(issueChangeStateDto);
         boolean result = issueService.changeState(issueChangeStateDto);
         Map<String, Object> response = new HashMap<>();
         if (result) {

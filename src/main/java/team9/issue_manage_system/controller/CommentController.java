@@ -22,7 +22,6 @@ public class CommentController {
     // 특정 이슈의 모든 댓글 가져오기
     @GetMapping("/{issueNum}/comments")
     public ResponseEntity<Map<String, Object>> getCommentsByIssueId(@PathVariable Long issueNum) {
-        System.out.println(issueNum);
         List<CommentReturnDto> commentReturnDtos = commentService.getCommentsByIssueId(issueNum);
         Map<String, Object> response = new HashMap<>();
         if (commentReturnDtos.isEmpty()) {
