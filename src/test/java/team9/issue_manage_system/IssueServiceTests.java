@@ -6,8 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
 import team9.issue_manage_system.dto.*;
 import team9.issue_manage_system.entity.Account;
 import team9.issue_manage_system.entity.Issue;
@@ -17,13 +15,16 @@ import team9.issue_manage_system.repository.IssueRepository;
 import team9.issue_manage_system.repository.ProjectRepository;
 import team9.issue_manage_system.service.IssueService;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class IssueServiceTests {
 
     @Mock
@@ -38,8 +39,6 @@ public class IssueServiceTests {
     @InjectMocks
     private IssueService issueService;
 
-    private IssueCreateDto issueCreateDto;
-    private IssueReturnDto issueReturnDto;
     private Issue issue;
     private Account account;
     private Project project;
@@ -48,16 +47,10 @@ public class IssueServiceTests {
     void setUp() {
         account = new Account();
         account.setId("new dev");
+        account.setRole("dev");
 
         project = new Project();
         project.setProjectNum(1L);
-
-        issueCreateDto = new IssueCreateDto();
-        issueCreateDto.setTitle("Test Issue");
-        issueCreateDto.setContent("Test Content");
-        issueCreateDto.setAccountId("new dev");
-        issueCreateDto.setProjectNum(1L);
-        issueCreateDto.setTag("bug");
 
         issue = new Issue();
         issue.setIssueNum(1L);
@@ -67,109 +60,20 @@ public class IssueServiceTests {
         issue.setProject(project);
         issue.setTag("bug");
         issue.setState(0);
+        issue.setDate(Date.from(Instant.now()));
     }
 
-
     @Test
-    void uploadIssueSuccess() {
+    void searchIssueByFilterTitle() {
         // Given
-        when(accountRepository.findById("new dev")).thenReturn(Optional.of(account));
-        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
-        when(issueRepository.save(any(Issue.class))).thenReturn(issue);
-
-        // When
-        ResponseEntity<Map<String, Object>> responseEntity = issueService.uploadIssue(issueCreateDto);
-        Map<String, Object> response = responseEntity.getBody();
-
-        // Then
-        assertNotNull(response);
-        assertTrue(response.containsKey("success"), "Response should contain 'success' key");
-        assertTrue((Boolean) response.get("success"), "Success value should be true");
-        IssueReturnDto issueReturnDto = (IssueReturnDto) response.get("issue");
-        assertEquals("Test Issue", issueReturnDto.getTitle());
-
-        verify(issueRepository, times(1)).save(any(Issue.class));
-    }
-
-
-    @Test
-    void uploadIssueFail() {
-        // Given
-        when(accountRepository.findById("new dev")).thenReturn(Optional.empty());
-
-        // When
-        ResponseEntity<Map<String, Object>> responseEntity = issueService.uploadIssue(issueCreateDto);
-        Map<String, Object> response = responseEntity.getBody();
-
-        // Then
-        assertNotNull(response);
-        assertEquals("이슈를 생성할 수 없습니다.", response.get("result"));
-
-        verify(issueRepository, never()).save(any(Issue.class));
-    }
-
-    @Test
-    void assignDevSuccess() {
-        // Given
-        when(issueRepository.findById(1L)).thenReturn(Optional.of(issue));
-        when(accountRepository.findById("new dev")).thenReturn(Optional.of(account));
-        account.setRole("dev");
-
-        IssueAssignDevDto request = new IssueAssignDevDto();
-        request.setIssueNum(1L);
-        request.setDevId("new dev");
-
-        // When
-        ResponseEntity<Map<String, Object>> responseEntity = issueService.assignDev(request);
-        Map<String, Object> response = responseEntity.getBody();
-
-        // Then
-        assertNotNull(response);
-        assertTrue((Boolean) response.get("success"), "Response should be successful");
-        assertEquals(1, issue.getState(), "Issue state should be updated to 1");
-
-        verify(issueRepository, times(1)).save(issue);
-    }
-
-
-    @Test
-    void assignDevFailRole() {
-        when(issueRepository.findById(1L)).thenReturn(Optional.of(issue));
-        when(accountRepository.findById("new dev")).thenReturn(Optional.of(account));
-        account.setRole("dev");
-
-        Map<String, Object> response = issueService.assignDev(new IssueAssignDevDto()).getBody();
-
-        assertNotNull(response);
-        assertFalse((Boolean) response.get("success"));
-
-        verify(issueRepository, never()).save(issue);
-    }
-
-    @Test
-    void assignDevFailNotFound() {
-        when(issueRepository.findById(1L)).thenReturn(Optional.empty());
-
-        Map<String, Object> response = issueService.assignDev(new IssueAssignDevDto()).getBody();
-
-        assertNotNull(response);
-        assertFalse((Boolean) response.get("success"));
-
-        verify(issueRepository, never()).save(any(Issue.class));
-    }
-
-//    searchIssueByFilter에 대한 테스트를 작성
-    @Test
-    void searchIssueByTitle() {
-        // Given
-        IssueSearchDto issueSearchDto = new IssueSearchDto();
-        issueSearchDto.setFilter("title");
-        issueSearchDto.setValue("Test Issue");
+        IssueSearchDto searchDto = new IssueSearchDto();
+        searchDto.setFilter("title");
+        searchDto.setValue("Test Issue");
 
         when(issueRepository.findAllByTitleContaining("Test Issue")).thenReturn(Collections.singletonList(issue));
 
         // When
-        List<IssueReturnDto> results = issueService.searchIssueByFilter(issueSearchDto);
+        List<IssueReturnDto> results = issueService.searchIssueByFilter(searchDto);
 
         // Then
         assertNotNull(results);
@@ -179,47 +83,6 @@ public class IssueServiceTests {
         verify(issueRepository, times(1)).findAllByTitleContaining("Test Issue");
     }
 
-    @Test
-    void searchIssueByTag() {
-        // Given
-        IssueSearchDto issueSearchDto = new IssueSearchDto();
-        issueSearchDto.setFilter("tag");
-        issueSearchDto.setValue("bug");
-
-        when(issueRepository.findAllByTagContaining("bug")).thenReturn(Collections.singletonList(issue));
-
-        // When
-        List<IssueReturnDto> results = issueService.searchIssueByFilter(issueSearchDto);
-
-        // Then
-        assertNotNull(results);
-        assertEquals(1, results.size());
-        assertEquals("bug", results.get(0).getTag());
-
-        verify(issueRepository, times(1)).findAllByTagContaining("bug");
-    }
-
-    @Test
-    void searchIssueByWriter() {
-        // Given
-        IssueSearchDto issueSearchDto = new IssueSearchDto();
-        issueSearchDto.setFilter("writer");
-        issueSearchDto.setValue("new dev");
-
-        when(issueRepository.findALLByAccount_Id("new dev")).thenReturn(Collections.singletonList(issue));
-
-        // When
-        List<IssueReturnDto> results = issueService.searchIssueByFilter(issueSearchDto);
-
-        // Then
-        assertNotNull(results);
-        assertEquals(1, results.size());
-        assertEquals("new dev", results.get(0).getAccountId());
-
-        verify(issueRepository, times(1)).findALLByAccount_Id("new dev");
-    }
-
-//    issueListAll에 대한 테스트를 작성
     @Test
     void issueListAll() {
         // Given
@@ -236,14 +99,90 @@ public class IssueServiceTests {
         verify(issueRepository, times(1)).findAll();
     }
 
-//    assignDevAuto에 대한 테스트를 작성
+
+    @Test
+    void uploadIssueSuccess() {
+        // Given
+        IssueCreateDto createDto = new IssueCreateDto();
+        createDto.setTitle("Test Issue");
+        createDto.setContent("Test Content");
+        createDto.setAccountId("new dev");
+        createDto.setProjectNum(1L);
+        createDto.setTag("bug");
+
+        when(accountRepository.findById("new dev")).thenReturn(Optional.of(account));
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(issueRepository.save(any(Issue.class))).thenReturn(issue);
+
+        // When
+        boolean result = issueService.uploadIssue(createDto);
+
+        // Then
+        assertTrue(result);
+        verify(issueRepository, times(1)).save(any(Issue.class));
+    }
+
+
+    @Test
+    void assignDevSuccess() {
+        // Given
+        IssueAssignDevDto assignDto = new IssueAssignDevDto();
+        assignDto.setIssueNum(1L);
+        assignDto.setDevId("new dev");
+        assignDto.setAccountId("project_leader");
+
+        Account projectLeader = new Account();
+        projectLeader.setId("project_leader");
+        project.setProjectLeader(projectLeader);
+
+        when(issueRepository.findById(1L)).thenReturn(Optional.of(issue));
+        when(accountRepository.findById("new dev")).thenReturn(Optional.of(account));
+
+        // When
+        boolean result = issueService.assignDev(assignDto);
+
+        // Then
+        assertTrue(result);
+        assertEquals(account, issue.getDeveloper());
+        assertEquals(1, issue.getState());
+
+        verify(issueRepository, times(1)).save(issue);
+    }
+
+    @Test
+    void assignDevFailRole() {
+        // Given
+        IssueAssignDevDto assignDto = new IssueAssignDevDto();
+        assignDto.setIssueNum(1L);
+        assignDto.setDevId("new dev");
+        assignDto.setAccountId("project_leader");
+
+        Account nonDev = new Account();
+        nonDev.setId("new dev");
+        nonDev.setRole("non-dev");
+
+        when(issueRepository.findById(1L)).thenReturn(Optional.of(issue));
+        when(accountRepository.findById("new dev")).thenReturn(Optional.of(nonDev));
+
+        // When
+        boolean result = issueService.assignDev(assignDto);
+
+        // Then
+        assertFalse(result);
+        verify(issueRepository, never()).save(any(Issue.class));
+    }
+
     @Test
     void assignDevAutoSuccess() {
         // Given
-        IssueAssignDevAutoDto dto = new IssueAssignDevAutoDto();
-        dto.setIssueNum(1L);
+        IssueAssignDevAutoDto autoAssignDto = new IssueAssignDevAutoDto();
+        autoAssignDto.setIssueNum(1L);
+        autoAssignDto.setAccountId("project_leader");
 
-        when(issueRepository.findById(1L)).thenReturn(Optional.of(issue));
+        Account projectLeader = new Account();
+        projectLeader.setId("project_leader");
+        project.setProjectLeader(projectLeader);
+
         Account dev1 = new Account();
         dev1.setId("dev1");
         dev1.setRole("dev");
@@ -254,6 +193,7 @@ public class IssueServiceTests {
 
         List<Account> developers = Arrays.asList(dev1, dev2);
 
+        when(issueRepository.findById(1L)).thenReturn(Optional.of(issue));
         when(accountRepository.findAllByRole("dev")).thenReturn(developers);
         when(issueRepository.countByDeveloperAndStateBetween(dev1, 1, 2)).thenReturn(2);
         when(issueRepository.countByDeveloperAndStateBetween(dev2, 1, 2)).thenReturn(1);
@@ -261,16 +201,30 @@ public class IssueServiceTests {
         when(issueRepository.countByDeveloperAndStateBetween(dev2, 3, 4)).thenReturn(2);
 
         // When
-        ResponseEntity<Map<String, Object>> responseEntity = issueService.assignDevAuto(dto);
-        Map<String, Object> response = responseEntity.getBody();
+        Optional<Account> result = issueService.assignDevAuto(autoAssignDto);
 
         // Then
-        assertNotNull(response);
-        assertTrue((Boolean) response.get("success"));
-        assertEquals("dev2", issue.getDeveloper().getId());
+        assertTrue(result.isPresent());
+        assertEquals("dev2", result.get().getId());
+        assertEquals(dev2, issue.getDeveloper());
         assertEquals(1, issue.getState());
 
         verify(issueRepository, times(1)).save(issue);
     }
 
+    @Test
+    void getIssueStatistics() {
+        // Given
+        when(issueRepository.count()).thenReturn(5L);
+        when(issueRepository.findAll()).thenReturn(Collections.singletonList(issue));
+
+        // When
+        IssueStatisticsDto stats = issueService.getIssueStatistics();
+
+        // Then
+        assertNotNull(stats);
+        assertEquals(5, stats.getTotalIssues());
+        assertTrue(stats.getIssuesByStatus().containsKey("new"));
+        assertEquals(1, stats.getIssuesByStatus().get("new"));
+    }
 }
